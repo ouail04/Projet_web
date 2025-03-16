@@ -1,0 +1,37 @@
+/* Barre de navigation*/
+nav{
+    height: 10vh; /* Prend 10% de la hauteur de l'écran */
+}
+
+
+/* Hero section */
+.hero-section {
+    background-image: url('../img/background-hero-section.jpg'); /* Remplace par ton image */
+    background-size: cover;
+    background-position: center;
+    height: 90vh; /* Prend  90% de la hauteur de l'écran */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: orangered; /* Couleur du texte */
+    padding: 0 20px;
+    margin-top: 10vh;
+}
+.hero-section h1 {
+    font-size: 3.5rem; /* Taille du titre */
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+.hero-section p {
+    font-size: 1.5rem; /* Taille du sous-titre */
+    margin-bottom: 30px;
+    background-color: white;
+    font-weight: bold;
+    opacity: 0.5; /* Transparance du texte */
+}
+.hero-section .btn {
+    font-size: 1.2rem;
+    padding: 15px 30px;
+    border-radius: 50px; /* Bouton arrondi */
+}
