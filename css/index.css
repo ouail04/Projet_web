@@ -35,3 +35,37 @@ nav{
     padding: 15px 30px;
     border-radius: 50px; /* Bouton arrondi */
 }
+
+
+
+/* Fonctionnalités du Service section */
+.features-section {
+    padding: 80px 0;
+    background-color: #f8f9fa; /* Couleur de fond */
+}
+
+.features-section h2 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 40px;
+    color: #333; /* Couleur du titre */
+}
+
+.feature-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.features-section h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333; /* Couleur des sous-titres */
+}
+
+.features-section p {
+    font-size: 1rem;
+    color: #666; /* Couleur du texte */
+    max-width: 250px;
+    margin: 0 auto;
+}
