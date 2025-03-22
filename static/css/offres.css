@@ -1,0 +1,117 @@
+.filter-section {
+    margin-top: 10vh;
+    padding: 40px 0;
+    background-color: #f8f9fa; /* Fond clair */
+}
+
+.filter-section h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 30px;
+    color: #333; /* Couleur du titre */
+}
+
+.form-control, .form-select {
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 1rem;
+}
+
+.form-label {
+    font-weight: bold;
+    color: #333; /* Couleur du texte */
+}
+
+.btn-primary {
+    background-color: #28a745; /* Couleur verte */
+    border: none;
+    padding: 10px 30px;
+    font-size: 1.1rem;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #218838; /* Couleur verte plus foncée au survol */
+}
+
+
+/* Offres section */
+.offers-section {
+    padding: 80px 0;
+    background-color: #ffffff; /* Fond blanc */
+}
+
+.offers-section h2 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 40px;
+    color: #333; /* Couleur du titre */
+}
+
+.card {
+    border: 1px solid #e0e0e0; /* Bordure légère */
+    border-radius: 10px; /* Coins arrondis */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px); /* Effet de levée au survol */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Ombre légère */
+}
+
+.card-img-top {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    height: 200px; /* Hauteur fixe pour les images */
+    object-fit: cover; /* Ajustement de l'image */
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333; /* Couleur du titre */
+}
+
+.card-text {
+    font-size: 1rem;
+    color: #666; /* Couleur du texte */
+    margin-bottom: 20px;
+}
+
+.btn-primary {
+    background-color: #28a745; /* Couleur verte */
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #218838; /* Couleur verte plus foncée au survol */
+}
+
+.pagination .page-item .page-link {
+    color: #28a745; /* Couleur verte */
+    border: 1px solid #28a745;
+    margin: 0 5px;
+    border-radius: 5px;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: #fff;
+}
+
+.pagination .page-item .page-link:hover {
+    background-color: #218838;
+    border-color: #218838;
+    color: #fff;
+}
