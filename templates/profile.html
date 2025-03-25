@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barre de Navigation Client</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../static/css/commande-client.css">
+</head>
+<body>
+    <!-- Barre de navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <!-- Logo du site -->
+            <a class="navbar-brand" href="#">
+                <img src="../static/img/logo2.png" alt="brand" width="50" height="50">
+            </a>
+
+            <!-- Bouton pour les écrans mobiles -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Liens de navigation -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Offres</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Mes commandes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Contact</a>
+                    </li>
+                </ul>
+
+                <!-- Icône du panier avec nombre d'articles -->
+                <div class="nav-item me-3">
+                    <a href="#" class="nav-link" id="cart-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="badge bg-danger" id="cart-count">3</span> <!-- Nombre d'articles -->
+                    </a>
+                </div>
+
+                <!-- Menu déroulant pour le profil -->
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user"></i> <!-- Icône de profil -->
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                        <li><a class="dropdown-item" href="/mon-profil">Mon profil</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="/deconnexion">Déconnexion</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Panier latéral -->
+    <div id="cart-overlay"></div>
+    <div id="cart-sidebar">
+        <h5>Mon panier</h5>
+        <ul id="cart-items">
+            <!-- Les articles du panier seront injectés ici -->
+            <li>Panier de fruits - 10 €</li>
+            <li>Panier de légumes - 12 €</li>
+            <li>Panier mixte - 15 €</li>
+        </ul>
+        <button class="btn btn-primary w-100">Passer la commande</button>
+    </div>
+
+    
+
+
+
+
+
+
+    <!-- section footer  -->
+    <footer class="footer-section bg-dark text-white py-5">
+        <div class="container">
+            <div class="row">
+                <!-- Colonne 1 : À propos -->
+                <div class="col-md-4 mb-4">
+                    <h5>À propos de Zero Gaspi</h5>
+                    <p class="text-muted">
+                        Zero Gaspi est une plateforme engagée dans la lutte contre le gaspillage alimentaire. Rejoignez-nous pour un avenir plus durable !
+                    </p>
+                    <div class="logo mt-3">
+                        <img src="../static/img/logo2.png" alt="Logo de Zero Gaspi" class="img-fluid" style="max-width: 150px;">
+                    </div>
+                </div>
+    
+                <!-- Colonne 2 : Liens utiles -->
+                <div class="col-md-4 mb-4">
+                    <h5>Liens utiles</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white text-decoration-none">Accueil</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">Offres</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">Mes commandes</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">Contact</a></li>
+                    </ul>
+                </div>
+    
+        
+                <!-- Formulaire de contact -->
+                <div class="col-md-4 mb-4" id="contact">
+                    <h5>Contactez-nous</h5>
+                    <p class="text-muted">Envoyez-nous un message pour toute question ou suggestion.</p>
+                    <form>
+                        <div class="mb-2">
+                            <input type="text" class="form-control" placeholder="Votre nom" required>
+                        </div>
+                        <div class="mb-2">
+                            <input type="email" class="form-control" placeholder="Votre adresse e-mail" required>
+                        </div>
+                        <div class="mb-2">
+                            <textarea class="form-control" rows="3" placeholder="Votre message" required></textarea>
+                        </div>
+                        <button class="btn btn-success w-100" type="submit">Envoyer</button>
+                    </form>
+                </div>
+
+
+            </div>
+    
+            <!-- Ligne des réseaux sociaux -->
+            <div class="row mt-4">
+                <div class="col-12 text-center">
+                    <h5>Suivez-nous</h5>
+                    <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-white me-3"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+    
+            <!-- Ligne du copyright -->
+            <div class="row mt-4">
+                <div class="col-12 text-center">
+                    <p class="text-muted mb-0">&copy; 2025 Zero Gaspi. Tous droits réservés.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- Scripts Bootstrap et JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../static/js/header-client.js"></script>
+</body>
+</html>
