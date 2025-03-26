@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validation des commandes - Espace Commerçant</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        .order-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid;
+            margin-bottom: 1rem;
+        }
+        .order-card.ready {
+            border-left-color: #20c997; /* Vert */
+            background-color: #f0fffa;
+        }
+        .order-card.completed {
+            border-left-color: #6c757d; /* Gris */
+            opacity: 0.8;
+        }
+        .badge-ready {
+            background-color: #20c997;
+        }
+        .badge-completed {
+            background-color: #6c757d;
+        }
+        .customer-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .order-items img {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        .code-input {
+            letter-spacing: 1rem;
+            font-size: 2rem;
+            height: 4rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3"><i class="bi bi-cart-check me-2"></i> Validation des commandes</h1>
+            <div class="badge bg-primary rounded-pill">2 à valider</div>
+        </div>
+
+        <!-- Liste des commandes -->
+        <div class="row" id="ordersContainer">
+            <!-- Commande 1 -->
+            <div class="col-12 mb-3">
+                <div class="card order-card ready" data-order-id="1001" data-status="ready">
+                    <div class="card-body">
+                        <!-- En-tête simplifié -->
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h5 class="card-title mb-0">#1001 - Marie Dupont</h5>
+                                <small class="text-muted">12/06/2023 09:30</small>
+                            </div>
+                            <div class="text-end">
+                                <span class="badge bg-success rounded-pill">À valider</span>
+                                <h4 class="mt-1 mb-0">24,50 €</h4>
+                            </div>
+                        </div>
+            
+                        <!-- Liste des produits (inchangée) -->
+                        <div class="order-items mb-3">
+                            <div class="d-flex align-items-center mb-2">
+                                <img src="produit1.jpg" alt="Produit" class="me-2" style="width:30px;height:30px">
+                                <div class="flex-grow-1">
+                                    <div class="d-flex justify-content-between">
+                                        <span>Panier de fruits (x2)</span>
+                                        <span class="text-nowrap">18,00 €</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <img src="produit2.jpg" alt="Produit" class="me-2" style="width:30px;height:30px">
+                                <div class="flex-grow-1">
+                                    <div class="d-flex justify-content-between">
+                                        <span>Pain bio (x1)</span>
+                                        <span class="text-nowrap">6,50 €</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+            
+                        <!-- Bouton de validation centré -->
+                        <div class="text-center">
+                            <button class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#validateModal" data-order-id="1001">
+                                <i class="bi bi-upc-scan me-2"></i>Valider la commande
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Commande 2 -->
+            <div class="col-12 mb-3">
+                <div class="card order-card ready" data-order-id="1002" data-status="ready">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <h5 class="card-title mb-0">Jean Martin</h5>
+                                    <small class="text-muted">#1002 - 12/06/2023 10:15</small>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <span class="badge badge-ready rounded-pill">Prête à récupérer</span>
+                                <h4 class="mt-2">15,20 €</h4>
+                            </div>
+                        </div>
+
+                        <div class="order-items mb-3">
+                            <div class="d-flex align-items-center">
+                                <img src="produit3.jpg" alt="Produit" class="me-2">
+                                <div class="flex-grow-1">
+                                    <div class="d-flex justify-content-between">
+                                        <span>Fromage local (x1)</span>
+                                        <span>15,20 €</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#validateModal" data-order-id="1002">
+                                <i class="bi bi-upc-scan me-1"></i> Valider
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Historique -->
+        <div class="mt-5">
+            <h2 class="h4 mb-3"><i class="bi bi-clock-history me-2"></i> Historique des validations</h2>
+            
+            <!-- Commande validée 1 -->
+            <div class="card order-card completed mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h5 class="card-title mb-1">#1000 - Sophie Leroy</h5>
+                            <p class="card-text mb-1">Panier légumes + Confiture maison</p>
+                            <small class="text-muted"><i class="bi bi-check-circle text-success me-1"></i> Validée le 12/06/2023 à 11:45</small>
+                        </div>
+                        <div class="text-end">
+                            <span class="badge badge-completed rounded-pill">Terminée</span>
+                            <h4 class="mt-2">32,75 €</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Commande validée 2 -->
+            <div class="card order-card completed mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h5 class="card-title mb-1">#999 - Thomas Bernard</h5>
+                            <p class="card-text mb-1">Plateau fromages</p>
+                            <small class="text-muted"><i class="bi bi-check-circle text-success me-1"></i> Validée le 11/06/2023 à 17:15</small>
+                        </div>
+                        <div class="text-end">
+                            <span class="badge badge-completed rounded-pill">Terminée</span>
+                            <h4 class="mt-2">18,90 €</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-outline-secondary w-100 mt-2">
+                <i class="bi bi-arrow-down me-1"></i> Voir plus
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal de validation -->
+    <div class="modal fade" id="validateModal" tabindex="-1" aria-labelledby="validateModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="validateModalLabel">Validation de commande</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Demandez au client son code de validation à 6 chiffres :</p>
+                    
+                    <div class="mb-4">
+                        <input type="text" class="form-control code-input" id="validationCode" 
+                               placeholder="______" maxlength="6" inputmode="numeric" pattern="\d*">
+                        <small class="text-muted">Code présent dans l'email de confirmation du client</small>
+                    </div>
+                    
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        Ne validez que lorsque le client a récupéré ses articles
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-success" id="confirmValidationBtn">Confirmer la validation</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Gestion de la saisie du code
+        document.getElementById('validationCode').addEventListener('input', function(e) {
+            // N'autorise que les chiffres
+            this.value = this.value.replace(/[^0-9]/g, '');
+            
+            // Met en majuscule automatiquement
+            this.value = this.value.toUpperCase();
+        });
+
+        // Confirmation de validation
+        document.getElementById('confirmValidationBtn').addEventListener('click', function() {
+            const code = document.getElementById('validationCode').value;
+            
+            if (code.length === 6) {
+                // Récupère l'ID de la commande
+                const orderId = document.querySelector('#validateModal').dataset.orderId;
+                
+                // Ici, vous ajouteriez la logique pour valider la commande
+                alert(`Commande #${orderId} validée avec succès !`);
+                
+                // Ferme la modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('validateModal'));
+                modal.hide();
+                
+                // Recharge la page pour mettre à jour la liste
+                setTimeout(() => location.reload(), 1000);
+            } else {
+                alert('Veuillez entrer un code de validation valide (6 chiffres)');
+            }
+        });
+
+        // Passe l'ID de la commande à la modal
+        document.querySelectorAll('[data-bs-target="#validateModal"]').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelector('#validateModal').dataset.orderId = this.dataset.orderId;
+                document.getElementById('validationCode').value = '';
+                document.getElementById('validationCode').focus();
+            });
+        });
+    </script>
+</body>
+</html>
