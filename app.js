@@ -30,6 +30,9 @@ app.get('/commandes', clientController.showCommandesPage);
 
 // Route commercant user
 app.get('/commercant', commercantController.showCommercantIndexPage);
+app.get('/mes-offres', commercantController.showCommercantOffres);
+app.get('/commercant-commandes', commercantController.showCommercantCommandes);
+app.get('/commercant-profil', commercantController.showCommercantProfil);
 
 app.listen(port, () => {
     console.log(`Serveur démarré sur http://localhost:${port}`);
