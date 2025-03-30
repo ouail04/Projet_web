@@ -1,0 +1,83 @@
+<section class="filter-section py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-4">🔍 Recherche</h2>
+        <form action="" method="GET"> <!-- Formulaire pour envoyer les données -->
+            <div class="row">
+                <!-- Barre de recherche par nom de produit -->
+                <div class="col-md-12 mb-4">
+                    <input type="text" class="form-control" name="productName" placeholder="Rechercher par nom de produit...">
+                </div>
+
+                <!-- Filtre par ville -->
+                <div class="col-md-6 mb-3">
+                    <label for="city" class="form-label">Ville</label>
+                    <select class="form-select" id="city" name="city">
+                        <option value="">Sélectionner une ville...</option>
+                        <option value="paris">Paris</option>
+                        <option value="lyon">Lyon</option>
+                        <option value="marseille">Marseille</option>
+                        <option value="toulouse">Toulouse</option>
+                        <option value="bordeaux">Bordeaux</option>
+                        <!-- Ajoute d'autres villes ici -->
+                    </select>
+                </div>
+
+                <!-- Filtres supplémentaires -->
+                <div class="col-md-6 mb-3">
+                    <label for="priceSort" class="form-label">Trier par prix</label>
+                    <select class="form-select" id="priceSort" name="priceSort">
+                        <option value="">Sélectionner...</option>
+                        <option value="lowToHigh">Du plus bas au plus haut</option>
+                        <option value="highToLow">Du plus haut au plus bas</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="expirationDate" class="form-label">Trier par date d'expiration</label>
+                    <select class="form-select" id="expirationDate" name="expirationDate">
+                        <option value="">Sélectionner...</option>
+                        <option value="soonest">Proche de l'expiration</option>
+                        <option value="latest">Plus éloignée</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="priceRange" class="form-label">Filtrer par prix</label>
+                    <select class="form-select" id="priceRange" name="priceRange">
+                        <option value="">Sélectionner...</option>
+                        <option value="lessThan5">Moins de 5€</option>
+                        <option value="5to10">Entre 5€ et 10€</option>
+                        <option value="moreThan10">Plus de 10€</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="type" class="form-label">Type de produit</label>
+                    <select class="form-select" id="type" name="type">
+                        <option value="">Sélectionner...</option>
+                        <option value="boisson">Boisson</option>
+                        <option value="sandwich">Sandwich</option>
+                        <option value="viande">Viande</option>
+                        <option value="alimentation">Alimentation</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="merchantType" class="form-label">Type de commerçant</label>
+                    <select class="form-select" id="merchantType" name="merchantType">
+                        <option value="">Sélectionner...</option>
+                        <option value="restaurant">Restaurant</option>
+                        <option value="supermarket">Supermarket</option>
+                        <option value="boulangerie">Boulangerie</option>
+                        <option value="autre">Autre</option>
+                    </select>
+                </div>
+
+                <!-- Bouton Appliquer les filtres -->
+                <div class="col-md-12 text-center mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg">Appliquer les filtres</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
