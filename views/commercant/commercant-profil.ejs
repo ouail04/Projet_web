@@ -1,0 +1,19 @@
+<%- include('partials/header-commercant') %>
+<div class="container py-5">
+    <!-- En-tête du profil -->
+    <div class="profile-header text-center">
+        <h1 class="h3 mb-1">Mon Commerce</h1>
+        <p class="text-muted"><i class="bi bi-geo-alt-fill"></i> Paris, France</p>
+    </div>
+    <%- include('../client/partials/information-personnelle') %>
+    <form id="merchantProfileForm">
+        <%- include('partials/informations-commerce') %>
+        <%- include('partials/Horaire-overture') %>
+        <%- include('partials/information-payment') %>
+    </form>
+    <%- include('../client/partials/avis') %>
+    <%- include('../client/partials/supprimer-compte') %>
+</div>
+
+<%- include('../client/partials/modal-modifier-password') %>
+<%- include('../partials/footer') %>
