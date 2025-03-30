@@ -1,0 +1,51 @@
+* Témoignages section */
+.testimonials-section {
+    padding: 80px 0;
+    background-color: #f8f9fa; /* Fond clair */
+}
+
+.testimonials-section h2 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 40px;
+    color: #333; /* Couleur du titre */
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px); /* Effet de levée au survol */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 0;
+    color: #333; /* Couleur du titre */
+}
+
+
+
+.card-text {
+    font-size: 1rem;
+    color: #666; /* Couleur du texte */
+    margin-bottom: 20px;
+}
+
+.text-warning {
+    color: #ffc107; /* Couleur des étoiles */
+}
+
+.fa-star, .fa-star-half-alt {
+    font-size: 1.2rem;
+}

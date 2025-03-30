@@ -1,0 +1,22 @@
+.card-header {
+    font-weight: 600;
+}
+.form-label {
+    font-weight: 500;
+}
+.input-group-text {
+    background-color: #f8f9fa;
+}
+.payment-card {
+    transition: all 0.3s ease;
+}
+.payment-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.bi-credit-card, .bi-dash-circle, .bi-calendar2-check {
+    color: #6c757d;
+}
+.badge.bg-success {
+    font-size: 0.75rem;
+}

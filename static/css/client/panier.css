@@ -1,0 +1,33 @@
+ /* style de section panier */
+ #cart-sidebar {
+    position: fixed;
+    top: 0;
+    right: -400px; /* Caché par défaut */
+    width: 400px;
+    height: 100%;
+    background-color: #fff;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    transition: right 0.3s ease;
+    z-index: 1000;
+    padding: 20px;
+}
+
+#cart-sidebar.active {
+    right: 0; /* Afficher le panier */
+}
+
+/* Overlay pour le panier */
+#cart-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: none;
+}
+
+#cart-overlay.active {
+    display: block; /* Afficher l'overlay */
+}

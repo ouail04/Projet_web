@@ -1,0 +1,42 @@
+/* Footer */
+.footer-section {
+    background-color: #343a40; /* Couleur de fond sombre */
+}
+
+.footer-section h5 {
+    font-size: 1.25rem;
+    margin-bottom: 20px;
+    color: #ffffff; /* Couleur du titre */
+}
+
+.footer-section p {
+    font-size: 0.9rem;
+    color: #ffffff !important; /* Couleur du texte secondaire */
+}
+
+.footer-section a {
+    color: #ffffff; /* Couleur des liens */
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-section a:hover {
+    color: #28a745; /* Couleur au survol */
+}
+
+.footer-section .form-control {
+    border-radius: 0;
+}
+
+.footer-section .btn-success {
+    border-radius: 0;
+}
+
+.footer-section .fab {
+    font-size: 1.5rem;
+    transition: color 0.3s ease;
+}
+
+.footer-section .fab:hover {
+    color: #28a745; /* Couleur au survol */
+}

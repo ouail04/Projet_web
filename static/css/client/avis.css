@@ -1,0 +1,26 @@
+ /* Style pour les étoiles de notation */
+ .rating-stars {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+}
+.rating-stars input {
+    display: none;
+}
+.rating-stars label {
+    font-size: 1.5rem;
+    color: #ddd;
+    cursor: pointer;
+    margin-right: 5px;
+}
+.rating-stars input:checked ~ label,
+.rating-stars label:hover,
+.rating-stars label:hover ~ label {
+    color: #ffc107;
+}
+.rating-stars input:checked + label {
+    color: #ffc107;
+}
+.filtre-avis{
+    position: fixed;
+}
