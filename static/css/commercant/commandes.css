@@ -1,0 +1,37 @@
+.order-card {
+    transition: all 0.3s ease;
+    border-left: 4px solid;
+    margin-bottom: 1rem;
+}
+.order-card.ready {
+    border-left-color: #20c997; /* Vert */
+    background-color: #f0fffa;
+}
+.order-card.completed {
+    border-left-color: #6c757d; /* Gris */
+    opacity: 0.8;
+}
+.badge-ready {
+    background-color: #20c997;
+}
+.badge-completed {
+    background-color: #6c757d;
+}
+.customer-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.order-items img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+.code-input {
+    letter-spacing: 1rem;
+    font-size: 2rem;
+    height: 4rem;
+    text-align: center;
+}
