@@ -1,0 +1,126 @@
+<div class="card mt-4 shadow-sm">
+    <div class="card-header bg-warning text-dark">
+        <h5 class="mb-0"><i class="bi bi-star-fill me-2"></i> Avis et notes laissés</h5>
+    </div>
+    <div class="card-body">
+        <!-- Filtres -->
+        <div class="row mb-4 ">
+            <div class="col-md-6">
+                <label for="reviewSort" class="form-label">Trier par :</label>
+                <select class="form-select" id="reviewSort">
+                    <option selected>Plus récents</option>
+                    <option>Plus anciens</option>
+                    <option>Meilleures notes</option>
+                    <option>Moins bonnes notes</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="reviewSearch" class="form-label">Rechercher :</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="reviewSearch" placeholder="Nom du commerce...">
+                    <button class="btn btn-outline-secondary" type="button">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Liste des avis -->
+        <div class="list-group">
+            <!-- Avis  -->
+
+
+            <% list_avis.forEach((avi) =>{ %>
+            <div class="list-group-item">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="me-3">
+                        <h6 class="mb-1">Boulangerie du Coin</h6>
+                        <div class="mb-2">
+                            <span class="text-warning">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-half"></i>
+                            </span>
+                            <span class="ms-2">4.5/5</span>
+                        </div>
+                        <p class="mb-1">Excellent pain et viennoiseries, mais pourrait réduire ses emballages plastiques.</p>
+                        <small class="text-muted">Posté le 15/06/2023</small>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editReviewModal">
+                            <i class="bi bi-pencil"></i> Modifier
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="confirmDeleteReview(1)">
+                            <i class="bi bi-trash"></i> Supprimer
+                        </button>
+                    </div>
+                </div>
+            </div>
+           <%}); %>
+
+
+        </div>
+
+
+    </div>
+</div>
+
+<!-- Modal Modification d'avis -->
+<div class="modal fade" id="editReviewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modifier votre avis</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editReviewForm">
+                    <div class="mb-3">
+                        <label class="form-label">Commerce :</label>
+                        <p class="fw-bold">Boulangerie du Coin</p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Votre note :</label>
+                        <div class="rating-stars">
+                            <input type="radio" id="star5" name="rating" value="5">
+                            <label for="star5"><i class="bi bi-star-fill"></i></label>
+                            <input type="radio" id="star4" name="rating" value="4">
+                            <label for="star4"><i class="bi bi-star-fill"></i></label>
+                            <input type="radio" id="star3" name="rating" value="3">
+                            <label for="star3"><i class="bi bi-star-fill"></i></label>
+                            <input type="radio" id="star2" name="rating" value="2">
+                            <label for="star2"><i class="bi bi-star-fill"></i></label>
+                            <input type="radio" id="star1" name="rating" value="1">
+                            <label for="star1"><i class="bi bi-star-fill"></i></label>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="reviewText" class="form-label">Votre avis :</label>
+                        <textarea class="form-control" id="reviewText" rows="4">Excellent pain et viennoiseries, mais pourrait réduire ses emballages plastiques.</textarea>
+                    </div>
+                    
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="anonymousEdit">
+                        <label class="form-check-label" for="anonymousEdit">
+                            Publier de manière anonyme
+                        </label>
+                    </div>
+                </form>
+            </div>
+
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-warning" onclick="saveReviewChanges()">
+                    <i class="bi bi-save me-1"></i> Enregistrer les modifications
+                </button>
+            </div>
+
+
+        </div>
+    </div>
+</div>

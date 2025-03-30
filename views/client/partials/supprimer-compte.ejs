@@ -1,0 +1,65 @@
+<!-- Section Gestion du compte -->
+<div class="container mt-4">
+    <div class="card border-danger">
+        <div class="card-header bg-danger text-white">
+            <h5 class="mb-0"><i class="bi bi-person-x-fill me-2"></i> Gestion du compte</h5>
+        </div>
+        <div class="card-body">
+            <!-- Option Déconnexion -->
+            <div class="mb-4 p-3 border-bottom">
+                <button class="btn btn-outline-primary" id="logoutBtn">
+                    <i class="bi bi-box-arrow-right me-2"></i>Se déconnecter
+                </button>
+            </div>
+
+            <div>
+                <div class="alert alert-danger mb-3">
+                    <h6>Données qui seront supprimées :</h6>
+                    <ul>
+                        <li>Profil et informations personnelles</li>
+                        <li>Historique des commandes</li>
+                        <li>Moyens de paiement</li>
+                    </ul>
+                </div>
+
+                <div class="mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="confirmDelete">
+                        <label class="form-check-label" for="confirmDelete">
+                            Je comprends que cette action est irréversible
+                        </label>
+                    </div>
+                </div>
+
+                <button class="btn btn-danger w-100" id="deleteAccountBtn" disabled 
+                        data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+                    <i class="bi bi-trash3-fill me-2"></i>Supprimer mon compte
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Confirmation -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1">
+    <form action="">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Confirmation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Êtes-vous sûr de vouloir supprimer définitivement votre compte ?</p>
+                    <input type="password" class="form-control mt-3" id="accountPassword" placeholder="Votre mot de passe">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                        <i class="bi bi-trash3-fill me-1"></i> Supprimer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

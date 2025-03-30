@@ -1,0 +1,61 @@
+    <!-- section de la liste des commandes -->
+    <section class="offers-section py-5">
+        <div class="container">
+            <h2 class="text-center mb-4">🛒 Mes commandes</h2>
+            <div class="row">
+                <% listCommandes.forEach((commande) =>{ %>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <img src="chemin/vers/image1.jpg" class="card-img-top" alt="Panier de fruits">
+                        <div class="card-body">
+                            <h5 class="card-title">Panier de Fruits</h5>
+                            <p class="card-text">Prix : 10 €</p>
+                
+                            <!-- Badge de statut -->
+                            <div class="mb-3">
+                                <span class="badge bg-warning">En attente</span> <!-- Statut : En attente -->
+                            </div>
+                
+                            <a href="#" class="btn btn-primary">Voir l'offre</a>
+                        </div>
+                    </div>
+                </div>
+                <% })%>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <img src="chemin/vers/image2.jpg" class="card-img-top" alt="Panier de légumes">
+                        <div class="card-body">
+                            <h5 class="card-title">Panier de Légumes</h5>
+                            <p class="card-text">Prix : 12 €</p>
+                
+                            <!-- Badge de statut -->
+                            <div class="mb-3">
+                                <span class="badge bg-info">En cours</span> <!-- Statut : En cours -->
+                            </div>
+                
+                            <a href="#" class="btn btn-primary">Voir l'offre</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <img src="chemin/vers/image3.jpg" class="card-img-top" alt="Panier mixte">
+                        <div class="card-body">
+                            <h5 class="card-title">Panier Mixte</h5>
+                            <p class="card-text">Prix : 15 €</p>
+                
+                            <!-- Badge de statut -->
+                            <div class="mb-3">
+                                <span class="badge bg-success">Terminée</span> <!-- Statut : Terminée -->
+                            </div>
+                
+                            <a href="#" class="btn btn-primary">Voir l'offre</a>
+                        </div>
+                    </div>
+                </div>
+
+                
+            </div>
+        </div>
+    </section>
