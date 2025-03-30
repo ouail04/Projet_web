@@ -1,0 +1,37 @@
+.filtre-avance{
+    margin-top: 2%;
+}
+.offer-card {
+    transition: all 0.3s ease;
+    border-left: 4px solid;
+}
+.offer-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+.offer-card.active {
+    border-left-color: #28a745;
+}
+.offer-card.paused {
+    border-left-color: #ffc107;
+}
+.offer-card.out-of-stock {
+    border-left-color: #dc3545;
+}
+.status-badge {
+    font-size: 0.75rem;
+    padding: 0.35em 0.65em;
+}
+.action-buttons .btn {
+    min-width: 100px;
+}
+.publication-date {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+.search-form {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.375rem;
+    margin-bottom: 1.5rem;
+}
