@@ -28,7 +28,7 @@ exports.showProfilPage = async (req, res) => {
     list_avis = [1,2,3,4,5,6,7,8] ;
 
     res.render('client/client-profil', {
-        titre: 'Profil',
+        titre: 'Profil Client',
         pages,
         css_files,
         list_avis
