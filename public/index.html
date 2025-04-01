@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stripe Payment Form</title>
+  <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+  <h2>Payer avec Stripe</h2>
+
+  <!-- Formulaire de paiement -->
+  <form id="payment-form">
+    <div id="card-element"></div> <!-- Champ carte de crédit -->
+
+    <button id="submit">Payer</button>
+    <div id="error-message"></div>
+  </form>
+
+  <script>
+    // Initialiser Stripe avec la clé publique
+    const stripe = Stripe('pk_test_51R90nwPv3vWBMOwXO1J4mqygb9GD0IOoRjLOeEH3KEyKBLnivVM2L144HxQsaSWWOgFrVRQe9Azbd2tyvX7tTAHE00QWW1dl7K'); // Remplacez par votre clé publique
+    const elements = stripe.elements();
+    const card = elements.create('card');
+    card.mount('#card-element');
+
+    // Soumettre le formulaire
+    const form = document.getElementById('payment-form');
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      // Créer un Intent de paiement
+      const response = await fetch('/create-payment-intent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      const { clientSecret } = await response.json();
+
+      // Confirmer le paiement avec le clientSecret
+      const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: card,
+        },
+      });
+
+      if (error) {
+        document.getElementById('error-message').textContent = error.message;
+      } else {
+        if (paymentIntent.status === 'succeeded') {
+          alert('Paiement réussi!');
+        }
+      }
+    });
+  </script>
+</body>
+</html>
