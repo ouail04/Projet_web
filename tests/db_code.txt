@@ -23,7 +23,6 @@ CREATE TABLE commerces (
     fermeture_weekend TIME,
     id_utilisateur INTEGER NOT NULL,
     avis_moyenne REAL DEFAULT 0,
-    commerce_URL TEXT,
     FOREIGN KEY (id_utilisateur) REFERENCES utilisateurs(id_utilisateur)
 );
 
@@ -76,7 +75,7 @@ CREATE TABLE commandes (
     prix_totale REAL NOT NULL,
     date_commande DATETIME DEFAULT CURRENT_TIMESTAMP,
     code_validation TEXT NOT NULL,
-    status TEXT NOT NULL DEFAULT 'en attente' CHECK(status IN ('en attente', 'validée', 'annulée', 'livrée')),
+    status TEXT NOT NULL DEFAULT 'en attente' CHECK(status IN ('en attente', 'validée', 'en cours')),
     FOREIGN KEY (id_client) REFERENCES utilisateurs(id_utilisateur)
 );
 
@@ -92,13 +91,13 @@ CREATE TABLE commandes_offres (
 
 -- Table transactions
 CREATE TABLE transactions (
-    id_payment INTEGER PRIMARY KEY AUTOINCREMENT,
-    numero_carte_client TEXT NOT NULL,
-    IBAN_commerce TEXT NOT NULL,
+    id_transaction INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_commerce_payment INTEGER NOT NULL,
     montant REAL NOT NULL,
     id_client_payment INTEGER NOT NULL,
     date_transaction DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_client_payment) REFERENCES client_payment(id_client_payment)
+    FOREIGN KEY (id_commerce_payment) REFERENCES commerce_payment(id_commerce_payment)
 );
 
 -- Table avis
@@ -112,9 +111,3 @@ CREATE TABLE avis (
     FOREIGN KEY (id_commerce) REFERENCES commerces(id_commerce),
     FOREIGN KEY (id_client) REFERENCES utilisateurs(id_utilisateur)
 );
-
--- Index pour améliorer les performances
-CREATE INDEX idx_commerce_utilisateur ON commerces(id_utilisateur);
-CREATE INDEX idx_offre_commerce ON offres(id_commerce);
-CREATE INDEX idx_commande_client ON commandes(id_client);
-CREATE INDEX idx_avis_commerce ON avis(id_commerce);
