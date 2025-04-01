@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .form-section {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .section-title {
+            color: #0d6efd;
+            border-bottom: 2px solid #0d6efd;
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+        }
+        .password-toggle {
+            cursor: pointer;
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h1 class="text-center mb-4"><i class="fas fa-user-plus me-2"></i>Formulaire d'inscription</h1>
+                <p class="text-center text-muted mb-5">Informations utilisateur</p>
+                
+                <form action="/create-account" method="post" id="registrationForm">
+                    <!-- Section 1: Informations personnelles -->
+                    <div class="form-section">
+                        <h2 class="section-title"><i class="fas fa-user me-2"></i>Informations personnelles</h2>
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="lastName" class="form-label">Nom*</label>
+                                <input name="nom" type="text" class="form-control" id="lastName" required>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="firstName" class="form-label">Prénom*</label>
+                                <input name="prenom" type="text" class="form-control" id="firstName" required>
+                            </div>
+                            
+                            <div class="col-12">
+                                <label for="email" class="form-label">Email*</label>
+                                <input name="email" type="email" class="form-control" id="email" required>
+                                <div class="form-text">Votre adresse email sera votre identifiant</div>
+                            </div>
+                            
+                            <div class="col-md-6 position-relative">
+                                <label for="password" class="form-label">Mot de passe*</label>
+                                <input name="mot_de_passe" type="password" class="form-control" id="password" required>
+                                <i class="fas fa-eye password-toggle" onclick="togglePassword('password')"></i>
+                            </div>
+                            
+                            <div class="col-md-6 position-relative">
+                                <label for="confirmPassword" class="form-label">Confirmer le mot de passe*</label>
+                                <input name="confirmation_mot_de_passe" type="password" class="form-control" id="confirmPassword" required>
+                                <i class="fas fa-eye password-toggle" onclick="togglePassword('confirmPassword')"></i>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="phone" class="form-label">Téléphone</label>
+                                <input name="telephone" type="tel" class="form-control" id="phone">
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="address" class="form-label">Adresse</label>
+                                <input name="adresse" type="text" class="form-control" id="address">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Section 2: Type d'utilisateur -->
+                    <div class="form-section">
+                        <h2 class="section-title"><i class="fas fa-users me-2"></i>Type d'utilisateur</h2>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Vous êtes*</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="type_utilisateur" id="client" value="client" checked required>
+                                <label class="form-check-label" for="client">
+                                    <i class="fas fa-shopping-cart me-2"></i>Client
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="type_utilisateur" id="merchant" value="merchant" required>
+                                <label class="form-check-label" for="merchant">
+                                    <i class="fas fa-store me-2"></i>Commerçant
+                                </label>
+                            </div>
+                            <div class="form-text mt-2">Les commerçants devront compléter des informations supplémentaires à l'étape suivante</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Bouton de validation -->
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-user-check me-2"></i>Créer mon compte
+                        </button>
+                    </div>
+
+                    <!-- Lien "Déjà un compte" -->
+                    <div class="text-center mt-3">
+                        <p>Déjà inscrit ? <a href="/login" class="text-decoration-none">Connectez-vous ici</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS + Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Fonction pour afficher/masquer le mot de passe
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            const icon = field.nextElementSibling;
+            
+            if (field.type === "password") {
+                field.type = "text";
+                icon.classList.replace("fa-eye", "fa-eye-slash");
+            } else {
+                field.type = "password";
+                icon.classList.replace("fa-eye-slash", "fa-eye");
+            }
+        }
+        
+        // Validation du formulaire
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Vérification de la correspondance des mots de passe
+            
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                alert("Les mots de passe ne correspondent pas !");
+                return;
+            }
+            window.location.href = "/create-account";
+            
+        });
+    </script>
+</body>
+</html>
