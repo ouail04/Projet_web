@@ -1,3 +1,7 @@
+const telechargerImage = require('./gestionImages')
+const Offre = require('../models/offre')
+
+
 exports.showCommercantIndexPage = async (req, res) => {
     const pages = [
         {titre : "Accueil", lien : "/Commercant"},
@@ -75,3 +79,27 @@ exports.showCommercantProfil = async (req, res) => {
         list_avis:avis
     });
 };
+
+exports.addOffer = [
+    telechargerImage, 
+    async (req, res) => {
+        try {
+            const {nom_offre, type, prix_avant, prix_apres, date_expiration, 
+                   disponibilite, description, condition, statut} = req.body;
+            if (!req.file) {
+                console.log('Debug - Fichier reçu:', req.file); 
+                return res.redirect('/mes-offres');
+            }
+            console.log(date_expiration) ;
+            const imageURL = 'static/uploads/' + req.file.filename;
+            const id_commerce = req.session.user?.id_commerce;
+            Offre.addNewOffre({id_commerce, nom_offre, type, prix_avant, prix_apres, date_expiration, 
+                disponibilite, description, condition, statut, imageURL,disponibilite  }) ;
+            console.error('Offre ajouter avec succees');
+            return res.redirect('/mes-offres');
+        } catch (error) {
+            console.error('Erreur:', error);
+            return res.redirect('/mes-offres');
+        }
+    }
+];
