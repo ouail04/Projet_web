@@ -8,7 +8,7 @@ exports.showHomePage = async (req, res) => {
         {titre : "Contact", lien : "#contact"}];
     const latestOffers = [1, 2, 3, 4, 5, 6]; 
     const avis = [1,2,3] ;
-    css_files = ["offres-section-index.css", "hero-section.css", "comment-ca-marche.css","avis-index.css"] ;
+    css_files = ["anonyme/offres-section-index.css", "anonyme/hero-section.css", "anonyme/comment-ca-marche.css","anonyme/avis-index.css"] ;
 
 
     res.render('anonyme/index', {
@@ -16,7 +16,8 @@ exports.showHomePage = async (req, res) => {
         pages,
         css_files,
         offers: latestOffers,
-        avis
+        avis,
+        session: req.session
     });
 };
 
