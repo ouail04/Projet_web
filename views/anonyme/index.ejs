@@ -1,4 +1,8 @@
-<%- include('partials/header-anonyme') %>
+<% if (session && session.user){ %>
+    <%- include('../client/partials/header-client') %>
+<%} else {%>
+    <%- include('partials/header-anonyme') %>
+<%} %>
 <%- include('partials/hero-section') %>
 <%- include('partials/comment-ca-marche') %>
 <%- include('partials/offres-section-index') %>
