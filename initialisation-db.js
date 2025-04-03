@@ -31,7 +31,7 @@ function initializeDatabase() {
             email TEXT NOT NULL UNIQUE,
             telephone TEXT,
             mot_de_passe TEXT NOT NULL,
-            type_utilisateur TEXT NOT NULL CHECK(type_utilisateur IN ('client', 'commerçant')),
+            type_utilisateur TEXT NOT NULL ,
             adresse TEXT
         );`);
 
@@ -86,6 +86,7 @@ function initializeDatabase() {
             type TEXT NOT NULL,
             condition TEXT,
             description TEXT,
+            statut TEXT,
             id_commerce INTEGER NOT NULL,
             date_publication DATETIME DEFAULT CURRENT_TIMESTAMP,
             disponibilite_actuelle INTEGER NOT NULL,
