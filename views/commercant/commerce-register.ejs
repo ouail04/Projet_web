@@ -45,7 +45,7 @@
                 <h1 class="text-center mb-4"><i class="fas fa-store-alt me-2"></i>Enregistrement de votre commerce</h1>
                 <p class="text-center text-muted mb-5">Complétez les informations de votre établissement</p>
                 
-                <form id="commerceForm" method="post" action="/commerce-payment-register">
+                <form id="commerceForm" method="post" action="/add-new-commerce">
                     
                     <!-- Section 1: Informations du commerce -->
                     <div class="form-section">
@@ -77,9 +77,9 @@
                         <div class="mb-4">
                             <h5><i class="fas fa-calendar-day me-2"></i>En semaine (lundi-vendredi)</h5>
                             <div class="time-input-group">
-                                <input type="time" class="form-control" id="ouverture" name="ouverture" required>
+                                <input type="time" class="form-control" id="ouverture" name="ouverture" value="10:10" required>
                                 <span class="time-separator">à</span>
-                                <input type="time" class="form-control" id="fermeture" name="fermeture" required>
+                                <input type="time" class="form-control" id="fermeture" name="fermeture" value="10:10" required>
                             </div>
                         </div>
                         
