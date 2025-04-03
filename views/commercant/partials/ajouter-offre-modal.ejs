@@ -1,5 +1,5 @@
- <!-- Modal Ajout d'offre -->
- <div class="modal fade" id="addOfferModal" tabindex="-1" aria-hidden="true">
+<!-- modal ajouter offre -->
+<div class="modal fade" id="addOfferModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-success text-white">
@@ -7,67 +7,100 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="addOfferForm">
+                <form id="addOfferForm" action="/add-offer" method="post" enctype="multipart/form-data">
                     <div class="row g-3">
                         <div class="col-md-8">
-                            <label for="offerName" class="form-label">Nom de l'offre</label>
-                            <input type="text" class="form-control" id="offerName" required>
+                            <label for="nom_offre" class="form-label">Nom de l'offre</label>
+                            <input type="text" class="form-control" id="nom_offre" name="nom_offre" value="test" required>
                         </div>
                         <div class="col-md-4">
-                            <label for="offerCategory" class="form-label">Catégorie</label>
-                            <select class="form-select" id="offerCategory" required>
-                                <option value="" selected disabled>Choisir...</option>
+                            <label for="type" class="form-label">Catégorie</label>
+                            <input list="categories" class="form-select" id="type" name="type" value="test" required>
+                            <datalist id="categories">
                                 <option>Fruits & Légumes</option>
                                 <option>Boulangerie</option>
                                 <option>Produits laitiers</option>
                                 <option>Viandes & Poissons</option>
                                 <option>Plats préparés</option>
-                            </select>
+                                <option>Boissons</option>
+                                <option>Épicerie</option>
+                                <option>Bio</option>
+                                <option>Surgelés</option>
+                            </datalist>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="prix_avant" class="form-label">Prix avant réduction (€)</label>
+                            <input type="number" step="0.01" class="form-control" id="prix_avant" name="prix_avant" value="1">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="prix_apres" class="form-label">Prix après réduction (€)</label>
+                            <input type="number" step="0.01" class="form-control" id="prix_apres" name="prix_apres" value="1" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="date_expiration" class="form-label">Date d'expiration</label>
+                            <input type="date" class="form-control" id="date_expiration" name="date_expiration" value="01/01/2025">
                         </div>
                         <div class="col-md-6">
-                            <label for="offerPrice" class="form-label">Prix (€)</label>
-                            <input type="number" step="0.01" class="form-control" id="offerPrice" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="offerQuantity" class="form-label">Quantité disponible</label>
-                            <input type="number" class="form-control" id="offerQuantity" required>
+                            <label for="disponibilite" class="form-label">Quantité totale disponible</label>
+                            <input type="number" class="form-control" id="disponibilite" name="disponibilite" value="10" required>
                         </div>
                         <div class="col-12">
-                            <label for="offerDescription" class="form-label">Description</label>
-                            <textarea class="form-control" id="offerDescription" rows="3"></textarea>
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="3">description</textarea>
                         </div>
                         <div class="col-12">
-                            <label for="offerDescription" class="form-label">Conditions d'éligibilité (optionnel)</label>
-                            <textarea class="form-control" id="offerDescription" rows="3"></textarea>
+                            <label for="condition" class="form-label">Conditions d'éligibilité (optionnel)</label>
+                            <textarea class="form-control" id="condition" name="condition" rows="3">condition</textarea>
                         </div>
                         <div class="col-md-6">
-                            <label for="offerImage" class="form-label">Image</label>
-                            <input class="form-control" type="file" id="offerImage" accept="image/*">
+                            <label for="offre_image" class="form-label">Image de l'offre</label>
+                            <input class="form-control" type="file" id="offre_image" accept="image/*" onchange="previewImage(this)" name="image">
+                            <input type="hidden" id="offre_URL" name="offre_URL">
+                            <div class="mt-2" id="imagePreview" style="display:none;">
+                                <img id="preview" src="#" alt="Preview" class="img-thumbnail" style="max-height: 150px;">
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Statut initial</label>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="offerStatus" id="offerActive" value="active" checked>
+                                <input class="form-check-input" type="radio" name="statut" id="offerActive" value="active" checked>
                                 <label class="form-check-label" for="offerActive">
                                     Activer immédiatement
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="offerStatus" id="offerPaused" value="paused">
+                                <input class="form-check-input" type="radio" name="statut" id="offerPaused" value="pause">
                                 <label class="form-check-label" for="offerPaused">
                                     Mettre en pause
                                 </label>
                             </div>
                         </div>
                     </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-success" onclick="addNewOffer()">
+                            <i class="bi bi-save me-1"></i> Enregistrer
+                        </button>
+                    </div>
                 </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                <button type="button" class="btn btn-success" onclick="addNewOffer()">
-                    <i class="bi bi-save me-1"></i> Enregistrer
-                </button>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+function previewImage(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            document.getElementById('preview').src = e.target.result;
+            document.getElementById('imagePreview').style.display = 'block';
+            // Stocker l'image en base64 temporairement ou l'uploader via AJAX
+            document.getElementById('offre_URL').value = e.target.result;
+        }
+        
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+</script>
