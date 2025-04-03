@@ -13,7 +13,8 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views')); // Pointe vers le dossier views
 // Middleware pour fichiers statiques (IMPORTANT)
 app.use('/static', express.static(path.join(__dirname, 'static'))); // Pointe vers le dossier static
-app.use(express.urlencoded({ extended: true })); // Middleware
+app.use(express.urlencoded({limit:'10mb', extended: true })); // pour les formulaire htmls
+
 
 
 app.use(session({
@@ -43,8 +44,8 @@ app.get('/commercant-profil', commercantController.showCommercantProfil);
 
 //Route register
 app.get('/register', registerController.showRegisterPage);
-app.post('/commerce-register', registerController.showCommerceRegisterPage);
-app.post('/commerce-payment-register', registerController.showCommercePaymentRegisterPage);
+app.get('/commerce-register', registerController.showCommerceRegisterPage);
+app.get('/commerce-payment-register', registerController.showCommercePaymentRegisterPage);
 
 //Route login
 app.get('/login', registerController.showLoginPage);
@@ -52,7 +53,12 @@ app.get('/login', registerController.showLoginPage);
 
 
 //fonctionnalite
-app.get('/create-account', registerController.createAccount);
+app.post('/create-account', registerController.createAccount);
+app.get('/logout', registerController.deconnexion) ;
+app.post('/add-new-commerce', registerController.addNewCommerce);
+app.post('/add-new-info-payment', registerController.addNewInfoPayemntCommerce);
+app.post('/login-form', registerController.login) ;
+app.post('/add-offer', commercantController.addOffer);
 
 app.listen(port, () => {
     console.log(`Serveur démarré sur http://localhost:${port}`);
