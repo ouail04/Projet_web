@@ -49,10 +49,7 @@
                     Vos informations bancaires sont cryptées et sécurisées conformément aux normes PCI DSS.
                 </div>
                 
-                <form id="paymentForm">
-                    <!-- Champ caché pour l'ID du commerce -->
-                    <input type="hidden" id="id_commerce" name="id_commerce" value="COM12345"> <!-- À remplacer dynamiquement -->
-                    
+                <form id="paymentForm" action="/add-new-info-payment" method="post">
                     <div class="payment-card">
                         <h2 class="section-title"><i class="fas fa-university me-2"></i>Coordonnées Bancaires</h2>
                         
@@ -113,7 +110,7 @@
                     </div>
                     
                     <div class="d-flex justify-content-between mt-4">
-                        <a href="profil_commercant.html" class="btn btn-outline-secondary">
+                        <a href="/commerce-register" class="btn btn-outline-secondary">
                             <i class="fas fa-arrow-left me-2"></i>Retour
                         </a>
                         <button type="submit" class="btn btn-success">
@@ -149,15 +146,15 @@
             e.preventDefault();
             
             // Validation supplémentaire si nécessaire
-            const iban = document.getElementById('IBAN_commerce').value;
+            /*const iban = document.getElementById('IBAN_commerce').value;
             if (!/^[A-Z]{2}\d{2}\s?(\w{4}\s?){2,7}\w{1,4}$/.test(iban)) {
                 alert("Veuillez saisir un IBAN valide");
                 return;
-            }
+            }*/
             
             // Ici, ajouter la logique d'envoi sécurisé au serveur
-            alert("Informations bancaires enregistrées avec succès !");
-            // window.location.href = "tableau_de_bord_commercant.html";
+            //alert("Informations bancaires enregistrées avec succès !");
+            this.submit();
         });
         
         // Remplir automatiquement l'ID commerce (exemple)
