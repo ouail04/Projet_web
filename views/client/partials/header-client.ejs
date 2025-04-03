@@ -10,7 +10,7 @@
 
     <link rel="stylesheet" href="static/css/footer.css">
     <% css_files.forEach((file) =>{ %>
-        <link rel="stylesheet" href="static/css/client/<%= file %>">
+        <link rel="stylesheet" href="static/css/<%= file %>">
         <% }); %>
     
 </head>
@@ -58,7 +58,7 @@
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
                         <li><a class="dropdown-item" href="/profil">Mon profil</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item text-danger" href="/deconnexion">Déconnexion</a></li>
+                        <li><a class="dropdown-item text-danger" href="/logout">Déconnexion</a></li>
                     </ul>
                 </div>
             </div>
