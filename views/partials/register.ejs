@@ -97,7 +97,7 @@
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="type_utilisateur" id="merchant" value="merchant" required>
+                                <input class="form-check-input" type="radio" name="type_utilisateur" id="merchant" value="commerçant" required>
                                 <label class="form-check-label" for="merchant">
                                     <i class="fas fa-store me-2"></i>Commerçant
                                 </label>
@@ -140,7 +140,9 @@
             }
         }
         
-        // Validation du formulaire
+        
+        // Validation du formulaire:
+        /*
         document.getElementById('registrationForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -153,9 +155,10 @@
                 alert("Les mots de passe ne correspondent pas !");
                 return;
             }
-            window.location.href = "/create-account";
+            this.submit();
             
         });
+        */
     </script>
 </body>
 </html>
