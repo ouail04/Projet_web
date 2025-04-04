@@ -59,7 +59,14 @@ app.post('/add-new-commerce', registerController.addNewCommerce);
 app.post('/add-new-info-payment', registerController.addNewInfoPayemntCommerce);
 app.post('/login-form', registerController.login) ;
 app.post('/add-offer', commercantController.addOffer);
+app.post('/edit-offre', commercantController.editOffer);
+app.post('/delete-offre', commercantController.deleteOffer);
+app.post('/set-status', commercantController.setStatus);
+app.get('/search-offer', commercantController.searchOffer);
+app.get('/search-offer-client', clientController.searchOfferClient);
 
+
+app.get('/details-offre/:id', clientController.showDetailsOffer);
 app.listen(port, () => {
     console.log(`Serveur démarré sur http://localhost:${port}`);
 });
