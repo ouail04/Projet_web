@@ -13,10 +13,17 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                <button type="button" class="btn btn-danger">
-                    <i class="bi bi-trash me-1"></i> Supprimer
-                </button>
+                <form id="deleteOfferForm" action="/delete-offre" method="post">
+                    <input type="hidden" name="id_offre" id="deleteOfferId">
+                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                </form>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    function setOfferId(id) {
+        document.getElementById('deleteOfferId').value = id;
+    }
+</script>

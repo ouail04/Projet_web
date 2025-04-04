@@ -8,10 +8,10 @@
             <% offers.forEach((offer) =>{ %>
             <div class="col-md-4 mb-4">
                 <div class="card h-100">
-                    <img src="chemin/vers/image1.jpg" class="card-img-top" alt="Panier de fruits">
+                    <img src="../../..<%= offer.offre_URL %>" class="card-img-top" alt="Panier de fruits">
                     <div class="card-body">
-                        <h5 class="card-title">Panier de Fruits</h5>
-                        <p class="card-text">Prix : 10 €</p>
+                        <h5 class="card-title"><%= offer.nom_offre %></h5>
+                        <p class="card-text">Prix : <%= offer.prix_apres %> €</p>
                         <a href="#" class="btn btn-primary">Voir l'offre</a>
                     </div>
                 </div>
@@ -19,21 +19,7 @@
             <% }); %>
         </div>
 
-        <!-- Pagination -->
-        <nav aria-label="Page navigation" class="mt-5">
-            <ul class="pagination justify-content-center">
-                <li class="page-item disabled">
-                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo;</a>
-                </li>
-                <% for(let i = 0; i < nb_pages; i++) { %>
-                    <li class="page-item <%= (current_page === i+1) ? 'active' : '' %>">
-                        <a class="page-link" href="?page=<%= i+1 %>"><%= i+1 %></a>
-                    </li>
-                <% } %>
-                <li class="page-item">
-                    <a class="page-link" href="#">&raquo;</a>
-                </li>
-            </ul>
-        </nav>
+
+
     </div>
 </section>

@@ -38,7 +38,7 @@
                         </div>
                         <div class="col-md-4">
                             <label for="date_expiration" class="form-label">Date d'expiration</label>
-                            <input type="date" class="form-control" id="date_expiration" name="date_expiration" value="01/01/2025">
+                            <input type="date" class="form-control" id="date_expiration" name="date_expiration" value="2025-01-01">
                         </div>
                         <div class="col-md-6">
                             <label for="disponibilite" class="form-label">Quantité totale disponible</label>
@@ -78,7 +78,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                        <button type="submit" class="btn btn-success" onclick="addNewOffer()">
+                        <button type="submit" class="btn btn-success">
                             <i class="bi bi-save me-1"></i> Enregistrer
                         </button>
                     </div>
@@ -89,18 +89,5 @@
 </div>
 
 <script>
-function previewImage(input) {
-    if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        
-        reader.onload = function(e) {
-            document.getElementById('preview').src = e.target.result;
-            document.getElementById('imagePreview').style.display = 'block';
-            // Stocker l'image en base64 temporairement ou l'uploader via AJAX
-            document.getElementById('offre_URL').value = e.target.result;
-        }
-        
-        reader.readAsDataURL(input.files[0]);
-    }
-}
+
 </script>

@@ -1,77 +1,62 @@
 <section class="filter-section py-5 bg-light">
     <div class="container">
         <h2 class="text-center mb-4">🔍 Recherche</h2>
-        <form action="" method="GET"> <!-- Formulaire pour envoyer les données -->
+        <form action="/search-offer-client" method="GET"> <!-- Formulaire pour envoyer les données -->
             <div class="row">
                 <!-- Barre de recherche par nom de produit -->
                 <div class="col-md-12 mb-4">
-                    <input type="text" class="form-control" name="productName" placeholder="Rechercher par nom de produit...">
+                    <input type="text"
+                    class="form-control"
+                    id="productSearch"
+                    name="nom_offre"
+                    placeholder="<%= typeof nom_offre === 'undefined' || nom_offre === '' ? 'Nom du produit...' : '' %>"
+                    value="<%= nom_offre || '' %>"> 
                 </div>
 
                 <!-- Filtre par ville -->
                 <div class="col-md-6 mb-3">
                     <label for="city" class="form-label">Ville</label>
-                    <select class="form-select" id="city" name="city">
-                        <option value="">Sélectionner une ville...</option>
-                        <option value="paris">Paris</option>
-                        <option value="lyon">Lyon</option>
-                        <option value="marseille">Marseille</option>
-                        <option value="toulouse">Toulouse</option>
-                        <option value="bordeaux">Bordeaux</option>
-                        <!-- Ajoute d'autres villes ici -->
-                    </select>
+                    <input type="text"
+                    class="form-control"
+                    id="city"
+                    name="ville"
+                    placeholder="<%= typeof ville === 'undefined' || ville === '' ? 'Entrez le nom de la ville...' : '' %>"
+                    value="<%= ville || '' %>">
                 </div>
 
                 <!-- Filtres supplémentaires -->
                 <div class="col-md-6 mb-3">
                     <label for="priceSort" class="form-label">Trier par prix</label>
-                    <select class="form-select" id="priceSort" name="priceSort">
-                        <option value="">Sélectionner...</option>
-                        <option value="lowToHigh">Du plus bas au plus haut</option>
-                        <option value="highToLow">Du plus haut au plus bas</option>
+                    <select class="form-select" id="priceSort" name="sorted_prix">
+                        <option value="all" <%= (sorted_prix || 'all') === 'all' ? 'selected' : '' %> >Sélectionner...</option>
+                        <option value="haut" <%= (sorted_prix || 'haut') === 'haut' ? 'selected' : '' %> >Du plus bas au plus haut</option>
+                        <option value="bas" <%= (sorted_prix || 'bas') === 'bas' ? 'selected' : '' %>>Du plus haut au plus bas</option>
                     </select>
                 </div>
 
                 <div class="col-md-6 mb-3">
                     <label for="expirationDate" class="form-label">Trier par date d'expiration</label>
-                    <select class="form-select" id="expirationDate" name="expirationDate">
-                        <option value="">Sélectionner...</option>
-                        <option value="soonest">Proche de l'expiration</option>
-                        <option value="latest">Plus éloignée</option>
+                    <select class="form-select" id="expirationDate" name="sorted_experation">
+                        <option value="all" <%= (sorted_experation || 'all') === 'all' ? 'selected' : '' %> >Sélectionner...</option>
+                        <option value="haut" <%= (sorted_experation || 'haut') === 'haut' ? 'selected' : '' %> >Proche de l'expiration</option>
+                        <option value="bas" <%= (sorted_experation || 'bas') === 'bas' ? 'selected' : '' %> >Plus éloignée</option>
                     </select>
                 </div>
 
-                <div class="col-md-6 mb-3">
-                    <label for="priceRange" class="form-label">Filtrer par prix</label>
-                    <select class="form-select" id="priceRange" name="priceRange">
-                        <option value="">Sélectionner...</option>
-                        <option value="lessThan5">Moins de 5€</option>
-                        <option value="5to10">Entre 5€ et 10€</option>
-                        <option value="moreThan10">Plus de 10€</option>
-                    </select>
-                </div>
+                
 
                 <div class="col-md-6 mb-3">
                     <label for="type" class="form-label">Type de produit</label>
                     <select class="form-select" id="type" name="type">
-                        <option value="">Sélectionner...</option>
-                        <option value="boisson">Boisson</option>
-                        <option value="sandwich">Sandwich</option>
-                        <option value="viande">Viande</option>
-                        <option value="alimentation">Alimentation</option>
-                    </select>
+                        <option value="all" <%= (type || 'all') === 'all' ? 'selected' : '' %> >Toutes catégories</option>
+                        <option value="Fruits & Légumes" <%= (type || 'Fruits & Légumes') === 'Fruits & Légumes' ? 'selected' : '' %> >Fruits & Légumes</option>
+                        <option value="Boulangerie" <%= (type || 'Boulangerie') === 'Boulangerie' ? 'selected' : '' %> >Boulangerie</option>
+                        <option value="Produits laitiers" <%= (type || 'Produits laitiers') === 'Produits laitiers' ? 'selected' : '' %> >Produits laitiers</option>
+                        <option value="Viandes & Poissons" <%= (type || 'Viandes & Poissons') === 'Viandes & Poissons' ? 'selected' : '' %> >Viandes & Poissons</option>
+                        <option value="Plats préparés" <%= (type || 'Plats préparés') === 'Plats préparés' ? 'selected' : '' %> >Plats préparés</option>
+                </select>
                 </div>
 
-                <div class="col-md-6 mb-3">
-                    <label for="merchantType" class="form-label">Type de commerçant</label>
-                    <select class="form-select" id="merchantType" name="merchantType">
-                        <option value="">Sélectionner...</option>
-                        <option value="restaurant">Restaurant</option>
-                        <option value="supermarket">Supermarket</option>
-                        <option value="boulangerie">Boulangerie</option>
-                        <option value="autre">Autre</option>
-                    </select>
-                </div>
 
                 <!-- Bouton Appliquer les filtres -->
                 <div class="col-md-12 text-center mt-4">

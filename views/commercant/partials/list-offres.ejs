@@ -8,43 +8,80 @@
                 <div class="d-flex">
                     <!-- Colonne Image (gauche) -->
                     <div class="me-2" style="min-width:20%">
-                        <img src="../../static/img/commerçant-image.jpg" class="img-thumbnail w-100" alt="img" style="height:auto; max-height:200px; object-fit:cover">
+                        <img src="../../..<%= offre.offre_URL %>" class="img-thumbnail w-100" alt="img" style="height:auto; max-height:200px; object-fit:cover">
                     </div>
                     
                     <!-- Colonne Contenu (droite) -->
                     <div class="flex-grow-1" style="min-width:0">
                         <div class="d-flex flex-wrap justify-content-between align-items-start mb-2">
-                            <h5 class="card-title mb-0 text-truncate">Panier de fruits de saison</h5>
-                            <span class="badge bg-success status-badge">Actif</span>
+                            <h5 class="card-title mb-0 text-truncate"> <%= offre.nom_offre %> </h5>
+                            <span class="badge bg-success status-badge"><%= offre.statut %></span>
                         </div>
                         
-                        <p class="card-text text-muted small mb-2">Mélange de fruits locaux (pommes, poires, raisins)</p>
+                        <p class="card-text text-muted small mb-2"><%= offre.description %></p>
                         
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <div>
-                                <span class="fw-bold text-primary">12,50 €</span>
+                                <span class="fw-bold text-primary"><%= offre.prix_apres %> €</span>
                                 <span class="text-muted ms-2">/panier</span>
                             </div>
                             <div class="text-end">
-                                <span class="fw-bold">15</span>
+                                <span class="fw-bold"><%= offre.disponibilite_actuelle %></span>
                                 <span class="text-muted">disponibles</span>
                             </div>
                         </div>
                         
                         <div class="publication-date mb-2">
-                            <i class="bi bi-calendar me-1"></i> Publié le 15/06/2023
+                            <i class="bi bi-calendar me-1"></i> Publié le <%= offre.date_publication %>
                         </div>
                         
                         <div class="d-flex flex-wrap action-buttons">
-                            <button class="btn btn-outline-warning btn-sm me-2 mb-1" data-bs-toggle="modal" data-bs-target="#editOfferModal">
+
+                            <button class="btn btn-outline-warning btn-sm me-2 mb-1" data-bs-toggle="modal" data-bs-target="#editOfferModal"
+                                onclick="setEditOfferData({ 
+                                    id_offre: '<%= offre.id_offre %>', 
+                                    nom_offre: '<%= offre.nom_offre %>', 
+                                    type: '<%= offre.type %>', 
+                                    prix_avant: '<%= offre.prix_avant %>', 
+                                    prix_apres: '<%= offre.prix_apres %>', 
+                                    disponibilite: '<%= offre.disponibilite %>', 
+                                    description: '<%= offre.description %>', 
+                                    date_expiration: '<%= offre.date_expiration %>',
+                                    offre_URL: '<%= offre.offre_URL %>',
+                                    condition: '<%= offre.condition %>',
+                                    statut: '<%= offre.statut %>'
+                                })">
                                 <i class="bi bi-pencil"></i> <span class="d-none d-sm-inline">Modifier</span>
                             </button>
-                            <button class="btn btn-outline-secondary btn-sm me-2 mb-1">
-                                <i class="bi bi-pause"></i> <span class="d-none d-sm-inline">Pause</span>
-                            </button>
-                            <button class="btn btn-outline-danger btn-sm mb-1" data-bs-toggle="modal" data-bs-target="#deleteOfferModal">
+
+                            
+                            <% if (offre.statut === 'active') { %>
+                                <form action="/set-status" method="post" class="d-inline">
+                                    <input type="hidden" name="id_offre" value="<%= offre.id_offre %>">
+                                    <input type="hidden" name="statut" value="pause">
+                                    <button type="submit" class="btn btn-outline-warning btn-sm me-2 mb-1">
+                                        <i class="bi bi-pause-circle"></i>
+                                        <span class="d-none d-sm-inline">Mettre en pause</span>
+                                    </button>
+                                </form>
+                                <% } %>
+                                
+                                <!-- Bouton Activer (si offre en pause) -->
+                                <% if (offre.statut === 'pause') { %>
+                                <form action="/set-status" method="post" class="d-inline">
+                                    <input type="hidden" name="id_offre" value="<%= offre.id_offre %>">
+                                    <input type="hidden" name="statut" value="active">
+                                    <button type="submit" class="btn btn-outline-success btn-sm me-2 mb-1">
+                                        <i class="bi bi-play-circle"></i>
+                                        <span class="d-none d-sm-inline">Activer</span>
+                                    </button>
+                                </form>
+                                <% } %>
+                           
+                            <button class="btn btn-outline-danger btn-sm mb-1" data-bs-toggle="modal" data-bs-target="#deleteOfferModal"  onclick="setOfferId('<%= offre.id_offre %>')">
                                 <i class="bi bi-trash"></i> <span class="d-none d-sm-inline">Supprimer</span>
                             </button>
+                            
                         </div>
                     </div>
                 </div>

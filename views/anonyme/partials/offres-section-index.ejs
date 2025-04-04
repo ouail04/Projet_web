@@ -5,16 +5,14 @@
         <div class="row">
             <!-- Offres affichage -->
             <% offers.forEach((offer) =>{ %>
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <img src="chemin/vers/image1.jpg" class="card-img-top" alt="Panier de fruits">
-                    <div class="card-body">
-                        <h5 class="card-title">Panier de Fruits</h5>
-                        <p class="card-text">Prix : 10 €</p>
-                        <a href="#" class="btn btn-primary">Voir l'offre</a>
-                    </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <img src="../../..<%= offer.offre_URL %>" class="card-img-top" alt="Panier de fruits">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= offer.nom_offre %></h5>
+                            <p class="card-text">Prix : <%= offer.prix_apres %> €</p>
+                            <a href="/details-offre/<%= offer.id_offre %>" class="btn btn-primary">Voir l'offre</a>                    </div>
                 </div>
-            </div>
             <% }); %>
             <!-- Fin des offres affichage -->
         </div>         
