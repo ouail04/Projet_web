@@ -1,0 +1,61 @@
+<!-- details offre section  -->
+<section class="offer-details-section">
+    <div class="container">
+        <!-- 1️⃣ En-tête de l'offre -->
+        <div class="row mb-5">
+            <div class="col-md-6">
+                <img src="../../..<%= offreDetails.offre_URL %>" alt="Panier anti-gaspillage" class="img-fluid">
+            </div>
+            <div class="col-md-6">
+                <h2><%= offreDetails.nom_offre %></h2>
+                <p class="lead"><%= offreDetails.prix_apres %>€ au lieu de <%= offreDetails.prix_avant %> €</p>
+                <p><i class="fas fa-clock"></i> Expirer le <strong><%= offreDetails.date_expiration %></strong></p>
+                <p><span class="badge bg-success">Encore <%= offreDetails.disponibilite_actuelle %>  paniers disponibles</span></p>
+                <div class="row mb-5">
+                    <div class="col-md-12">
+
+                        <div class="d-flex align-items-center mb-3">
+                            <button class="btn btn-success btn-lg me-3">Ajouter au panier</button>
+                            <select class="form-select me-3" style="width: auto;">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                            <div>
+                                <i class="fab fa-cc-visa fa-2x me-2"></i>
+                                <i class="fab fa-cc-mastercard fa-2x me-2"></i>
+                                <i class="fab fa-cc-paypal fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+        <!-- 2️⃣ Description détaillée -->
+        <div class="row mb-5">
+            <div class="col-md-12">
+                <h3>Description détaillée</h3>
+                <p> <%= offreDetails.description %> </p>
+                <p><strong>Type :</strong> <%= offreDetails.type %> </p>
+                <p><strong>Conditions spécifiques :</strong> <%= offreDetails.condition %> </p>
+            </div>
+        </div>
+
+        <!-- 3️⃣ Informations sur le commerçant -->
+        <div class="row mb-5">
+            <div class="col-md-12">
+                <h3>Informations sur le commerçant</h3>
+                <p><strong>Nom du commerce :</strong> <%= offreDetails.nom_commerce %> </p>
+                <p><strong>Adresse :</strong> <%= offreDetails.adresse_commerce %> </p>
+                <div class="map-container mb-3">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2905.724634877421!2d5.369757315483886!3d43.29694497913462!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12c9c0eb5b5c5b5b%3A0x5b5b5b5b5b5b5b5b!2sBoulangerie%20Paul!5e0!3m2!1sfr!2sfr!4v1633020000000!5m2!1sfr!2sfr" allowfullscreen="" loading="lazy"></iframe>                    </div>
+                <p><strong>Horaires d'ouverture :</strong> <%= offreDetails.ouverture %> - <%= offreDetails.fermeture %></p>
+                <p><strong>Avis :</strong> ⭐ <%= offreDetails.avis_moyenne %> /5 sur 120 avis</p>
+            </div>
+        </div>
+
+
+    </div>
+</section>
