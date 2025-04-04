@@ -20,7 +20,10 @@ const stockage = multer.diskStorage({
 
 const upload = multer({ 
     storage: stockage,
-    limits: { fileSize: 50 * 1024 * 1024 }, // 50mb la limite  
+    limits: { 
+        fileSize: 50 * 1024 * 1024, // 50MB max pour les fichiers
+        fieldSize: 10 * 1024 * 1024  // 10MB max pour les champs texte
+    },
     fileFilter: (req, file, cb) => {
         if (file.mimetype.startsWith('image/')) {
             cb(null, true);
@@ -30,4 +33,14 @@ const upload = multer({
     }
 });
 
-module.exports = upload.single('image');
+function telechargerImage(image){
+    try{
+        return upload.single('image');
+    } catch(err){
+        console.log("erreur image : ", err);
+        throw new Error(err) ;
+    }
+}
+
+
+module.exports = telechargerImage('image');
