@@ -62,3 +62,31 @@ function previewImage_modifier(input) {
         reader.readAsDataURL(input.files[0]);
     }
 }
+
+
+    document.getElementById('validationCode').addEventListener('input', function(e) {
+        // N'autorise que les chiffres
+        this.value = this.value.replace(/[^0-9]/g, '');
+        
+        // Met en majuscule automatiquement
+        this.value = this.value.toUpperCase();
+    });
+    // Gestion de tous les boutons de validation
+    document.querySelectorAll('[data-bs-target="#validateModal"]').forEach(button => {
+        button.addEventListener('click', function() {
+            const idCommande = this.getAttribute('data-order-id');
+            console.log("id commande :", idCommande);
+            document.getElementById('id_commande').value = idCommande;
+        });
+    });
+     // Confirmation de validation
+     document.getElementById('validationForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Empêche l'envoi par défaut du formulaire
+        const code = document.getElementById('validationCode').value;
+        if (code.length !== 6) {
+            alert("Veuillez saisir exactement 6 chiffres");
+            return false;
+        }
+        this.submit();
+        
+    });
