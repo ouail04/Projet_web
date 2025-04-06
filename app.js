@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const session = require('express-session');
 const app = express();
+const ejs = require('ejs');
 const port = 3000;
 const clientController = require('./controllers/clientController');
 const anonymeController = require('./controllers/anonymeController');
@@ -64,9 +65,21 @@ app.post('/delete-offre', commercantController.deleteOffer);
 app.post('/set-status', commercantController.setStatus);
 app.get('/search-offer', commercantController.searchOffer);
 app.get('/search-offer-client', clientController.searchOfferClient);
-
-
+app.get('/add-to-panier', clientController.addToPanier);
 app.get('/details-offre/:id', clientController.showDetailsOffer);
+app.get('/delete-offre-panier/:id', clientController.deleteOfferPanier);
+app.get('/payment/:id', clientController.showPaymentPage);
+app.post('/process-payment', clientController.processPayment);
+app.get('/search-commande-client', clientController.searchCommandeClient);
+app.post('/valider-commande', commercantController.validerCommande);
+app.post('/update-profil', clientController.updateProfil);
+app.post('/update-password', clientController.updatePasword) ;
+app.post('/add-card-payment', clientController.addCartePayment) ;
+app.get('/delete-card-payment/:id', clientController.deleteCartePaiement);
+app.post('/update-commercant-profil', commercantController.updateCommercantProfil);
+app.post('/update-commerce-payment', commercantController.updateCommercePaiement)
+app.post('/delete-account', registerController.deleteAccount);
+
 app.listen(port, () => {
     console.log(`Serveur démarré sur http://localhost:${port}`);
 });
