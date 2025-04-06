@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const sqlite3 = require('sqlite3').verbose();
-const { encryptIBAN, decryptIBAN } = require('../controllers/security')
+const { encrypt_data, decrypt_data } = require('../controllers/security')
 const path = require('path');
 const DB_PATH = path.join(__dirname, '../database.db');
 
@@ -15,7 +15,7 @@ const db = new sqlite3.Database(DB_PATH, (err) => {
 class CommercePayment{
     static async addNewInfoPayment({IBAN_commerce, BIC_SWIFT, titulaire_compte, nom_banque,devise,id_commerce}){
         return new Promise((resolve, reject)=>{
-            const crybted_Iban = encryptIBAN(IBAN_commerce) ;
+            const crybted_Iban = encrypt_data(IBAN_commerce) ;
             const requete = "INSERT INTO commerce_payment (IBAN_commerce, BIC_SWIFT, titulaire_compte, nom_banque,devise,id_commerce)" +
             "VALUES(?,?,?,?,?,?)" ;
             db.run(requete,[crybted_Iban, BIC_SWIFT, titulaire_compte, nom_banque,devise,id_commerce],
@@ -28,6 +28,55 @@ class CommercePayment{
                 }
             )
         });   
+    }
+
+    static async getCommercePaymentByID(id_commerce){
+        return new Promise((resolve, reject)=>{
+            const requete = "SELECT * FROM commerce_payment WHERE id_commerce = ?";
+            db.get(requete,[id_commerce],(err, row)=>{
+                if(err){
+                    console.error("Erreur SQL :", err.message);
+                    return reject(err);  
+                }
+                if (!row) {
+                    console.log("Aucun paiement trouvé");
+                    return reject(new Error("Aucun paiement trouvé"));  
+                }
+                return resolve(row);  
+            });
+        });
+    }
+
+    static async updateInfoCarteCommercant(IBAN_commerce, BIC_SWIFT, titulaire_compte, nom_banque,devise,id_commerce){
+        return new Promise((resolve, reject) => {
+            const requete = `
+                UPDATE commerce_payment 
+                SET IBAN_commerce = ?, 
+                    BIC_SWIFT = ?, 
+                    titulaire_compte = ?, 
+                    nom_banque = ?,
+                    devise = ? 
+                WHERE id_commerce = ?
+            `;
+            const crybted_Iban = encrypt_data(IBAN_commerce) ;
+            db.run(
+                requete, 
+                [crybted_Iban, BIC_SWIFT, titulaire_compte, nom_banque,devise,id_commerce], 
+                function(err) {
+                    if (err) {
+                        console.error('Erreur SQL:', err.message);
+                        reject(new Error('Échec de la mise à jour du commerce payment'));
+                    } else {
+                        resolve({
+                            changes: this.changes,
+                            message: this.changes > 0 
+                                ? 'commerce payment mis à jour avec succès' 
+                                : 'Aucun commerce payment trouvé avec cet ID'
+                        });
+                    }
+                }
+            );
+        });
     }
 }
 

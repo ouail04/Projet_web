@@ -71,5 +71,73 @@ class utilisateur{
             });
         });
     }
+
+    static async getutilisateurByID(id_utilisateur){
+        return new Promise((resolve, reject) => {
+            const requete = "SELECT * FROM utilisateurs WHERE id_utilisateur = ?";
+    
+            db.get(requete, [id_utilisateur], async (err, row) => {
+                if (err) {
+                    console.error("Erreur SQL :", err.message);
+                    return reject(err);  // Rejeter en cas d'erreur SQL
+                }
+    
+                if (!row) {
+                    console.log("Utilisateur non trouvé");
+                    return reject(new Error("Utilisateur non trouvé"));  // Rejeter si l'utilisateur n'existe pas
+                }
+
+                return resolve(row) ;
+            
+            });
+        });
+    
+    }
+
+
+    static async updateUtilisateur(id_utilisateur, adresse, nom, prenom, telephone, email){
+        return new Promise((resolve, reject) => {
+            const requete = "UPDATE utilisateurs SET adresse = ?, nom = ? , prenom = ? , telephone = ? , email = ? WHERE id_utilisateur = ?"
+            db.run(requete, [adresse, nom, prenom, telephone, email, id_utilisateur], function(err){
+                    if (err){
+                        reject(err);
+                    } else{
+                        resolve(this.lastID);
+                    }
+            } );
+        });
+    }
+
+
+
+    static async updatePassword(id_utilisateur, newPassword){
+
+        return new Promise(async (resolve, reject) => {
+            const requete = "UPDATE utilisateurs SET mot_de_passe = ? WHERE id_utilisateur = ?"
+            const mot_de_passe_hasher = await bcrypt.hash(newPassword,10);
+            db.run(requete, [mot_de_passe_hasher, id_utilisateur], function(err){
+                    if (err){
+                        reject(err);
+                    } else{
+                        resolve(this.changes);
+                    }
+            } );
+        });
+    }
+
+
+    static async deleteUtilisateur(id_utilisateur){
+        return new Promise(async (resolve, reject) => {
+            const requete = "DELETE FROM utilisateurs WHERE id_utilisateur = ?"
+            db.run(requete, [id_utilisateur], function(err){
+                    if (err){
+                        reject(err);
+                    } else{
+                        resolve(this.changes);
+                    }
+            } );
+        });
+    }
 }
+
 module.exports = utilisateur;

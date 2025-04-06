@@ -2,7 +2,7 @@ const utilisateur = require('../models/Utilisateur')
 const commerce = require('../models/Commerce')
 const CommercePayment =  require('../models/CommercePayment')
 const anonymeController = require('./anonymeController');
-
+const bcrypt = require('bcrypt');
 
 exports.showRegisterPage = async (req, res) => {
     res.render('partials/register');
@@ -112,3 +112,55 @@ exports.login = async (req, res) => {
     }
     
 }
+
+exports.deleteAccount = async (req, res) => {
+    try {
+        // 1. Vérification de session
+        if (!req.session.user) {
+            return res.redirect('/');
+        }
+
+        // 2. Extraction du mot de passe
+        const { mot_de_passe } = req.body; // Destructuration correcte
+        const id = req.session.user.id_utilisateur;
+
+        // 3. Validation du mot de passe
+        if (!mot_de_passe || typeof mot_de_passe !== 'string') {
+            req.flash('error', 'Mot de passe invalide');
+            return redirectBack(req, res);
+        }
+
+        // 4. Récupération de l'utilisateur
+        const user = await utilisateur.getutilisateurByID(id);
+        if (!user) {
+            req.flash('error', 'Utilisateur non trouvé');
+            return res.redirect('/');
+        }
+
+        // 5. Comparaison sécurisée
+        const isMatch = await bcrypt.compare(mot_de_passe, user.mot_de_passe);
+        
+        if (!isMatch) {
+            req.flash('error', 'Mot de passe incorrect');
+            return redirectBack(req, res);
+        }
+
+        // 6. Suppression et déconnexion
+        await utilisateur.deleteUtilisateur(id);
+        return res.redirect('/logout');
+
+    } catch (error) {
+        console.error('Erreur suppression compte:', error);
+        req.flash('error', 'Erreur lors de la suppression');
+        return redirectBack(req, res);
+    }
+};
+
+// Helper pour rediriger vers la page précédente
+function redirectBack(req, res) {
+    return req.session.user.type_utilisateur === 'client' 
+        ? res.redirect('/profil') 
+        : res.redirect('/commercant-profil');
+}
+
+

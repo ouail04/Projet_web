@@ -1,3 +1,4 @@
+const { rejects } = require('assert');
 const bcrypt = require('bcrypt');
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
@@ -23,7 +24,7 @@ class offre{
                 VALUES (?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?)
                 `;
 
-                db.run(requete, [1, nom_offre, type, prix_avant, prix_apres, date_expiration, 
+                db.run(requete, [id_commerce, nom_offre, type, prix_avant, prix_apres, date_expiration, 
                     disponibilite, description, condition, statut, imageURL, disponibilite], function(err) {
                     if (err) {
                         console.log("SQL ERR : " + err.message);
@@ -54,6 +55,24 @@ class offre{
                 
             });
         } );
+    }
+
+    static async getOffreByIdOffre(id_offre){
+        return new Promise((resolve, reject) =>{
+            const requete = "SELECT * FROM offres WHERE id_offre = ?" ;
+            db.get(requete, [id_offre], async (err, rows) =>{
+                if(err){
+                    console.error("Erreur SQL :", err.message);
+                    return reject(err); 
+                }
+                if (!rows){
+                    console.log("aucun offre trouvée") ;
+                    return reject(new Error("aucun offre trouvée"));
+                }
+                return resolve(rows) ;
+            
+            });
+        });
     }
 
     static async updateOffer({id_offre, nom_offre, type, prix_avant, prix_apres, date_expiration, 
@@ -159,7 +178,7 @@ class offre{
 
     static async searchOffer(nom_offre, type, sort_by, statut) {
         return new Promise((resolve, reject) => {
-            let requete = "SELECT * FROM offres WHERE nom_offre LIKE ? " ;
+            let requete = "SELECT * FROM offres WHERE statut = 'active' AND nom_offre LIKE ? " ;
             let params = [`%${nom_offre}%`];
             if (type != "all") {
                 requete += "AND type = ? ";
@@ -193,9 +212,9 @@ class offre{
 
 
 
-    static async searchOfferClient(nom_offre, type ,sorted_experation, sorted_prix, ville, limit = false) {
+    static async searchOfferClient(nom_offre, type ,sorted_experation, sorted_prix, ville, limit = 6) {
         return new Promise((resolve, reject) => {
-            let requete = "SELECT * FROM offres NATURAL JOIN commerces WHERE offres.nom_offre LIKE ? AND commerces.adresse_commerce LIKE ? " ;
+            let requete = "SELECT * FROM offres NATURAL JOIN commerces WHERE offres.nom_offre LIKE ? AND offres.statut = 'active' AND commerces.adresse_commerce LIKE ? " ;
             let params = [`%${nom_offre}%`, `%${ville}%`];
             if (type != "all") {
                 requete += "AND offres.type = ? ";
@@ -213,7 +232,8 @@ class offre{
                     }
                 }
             }
-            limit != false ? requete += " LIMIT 6" : requete += "" ;
+            limit != false ? requete += " LIMIT ?" : requete += "" ;
+            params.push(limit) ;
 
             console.log(requete) ;
             console.log(params) ;
@@ -250,6 +270,52 @@ class offre{
                 return resolve(row);  
             });
         });
+    }
+
+
+    
+
+
+    static async getPrix(id_offre) {
+        return new Promise((resolve, reject) => {
+            const requete = "SELECT * FROM offres WHERE id_offre = ?";
+    
+            db.get(requete, [id_offre], (err, row) => {
+                if (err) {
+                    console.error("Erreur SQL :", err.message);
+                    return reject(err);  
+                }
+    
+                if (!row) {
+                    console.log("Aucune offre trouvée");
+                    return reject(new Error("Aucune offre trouvée"));  
+                }
+    
+                return resolve(row);  
+            });
+        });
+
+    }
+    
+
+    static async updateDiponibilite(nouvelle_dispo, id_offre){
+        return new Promise((resolve, reject) => {
+            const requete = "UPDATE offres SET disponibilite_actuelle = ? WHERE id_offre = ?"
+            db.run(requete, [nouvelle_dispo, id_offre], function(err) {
+                if (err) {
+                    console.error("Erreur SQL :", err.message);
+                    return reject(err); 
+                }
+
+                if (this.changes === 0) {
+                    console.log("aucune offre trouvee");
+                    return reject(new Error("aucune offre trouvee"));  
+                }
+
+                console.log("disponibilite mis à jour avec succès. Changements: ${this.changes}");
+                return resolve("disponibilite modifier");  
+        });
+    });
     }
 }
 

@@ -1,37 +1,54 @@
 const telechargerImage = require('./gestionImages');
 const deleteImage = require('./delete-image')
 const Offre = require('../models/offre');
-const offre = require('../models/offre');
+const Commande = require('../models/Commande') ;
+const utilisateur = require('../models/Utilisateur');
+const Commerce = require('../models/Commerce');
+const CommercePayment = require('../models/CommercePayment');
+const { decrypt_data } = require('./security');
+
 
 
 exports.showCommercantIndexPage = async (req, res) => {
+    if(!req.session.user){
+        return res.redirect('/') ;
+    }
     const pages = [
         {titre : "Accueil", lien : "/Commercant"},
         {titre : "Mes offres", lien : "/mes-offres"},
         {titre : "Commandes", lien : "/commercant-commandes"},
+        {titre : "Profil", lien : "/commercant-profil"},
         {titre : "Contact", lien : "#contact"}];
-
-    const listCommandes = [1, 2, 3, 4, 5, 6]; 
     css_files = ["index-commercant.css"] ;
 
-
+        const user = await utilisateur.getutilisateurByID(req.session.user.id_utilisateur);
+        const listCommandes = await Commande.searchCommandesCommerce(req.session.user.id_utilisateur,'', 'default', 'recent'); 
+        const mes_offres = await Offre.getOffresByID(req.session.user.id_utilisateur);
+        console.log(mes_offres);
     res.render('commercant/index-commercant', {
         titre: 'Accueil',
         pages,
         css_files,
-        listCommandes
+        user,
+        listCommandes,
+        mes_offres
+
     });
 };
 
 exports.showCommercantOffres = async (req, res) => {
+    if(!req.session.user){
+        return res.redirect('/') ;
+    }
     const pages = [
         {titre : "Accueil", lien : "/Commercant"},
         {titre : "Mes offres", lien : "/mes-offres"},
         {titre : "Commandes", lien : "/commercant-commandes"},
+        {titre : "Profil", lien : "/commercant-profil"},
         {titre : "Contact", lien : "#contact"}];
     css_files = ["mes-offres.css"] ;
     try{
-        const listOffres = await Offre.getOffresByID(1) ;
+        const listOffres = await Offre.getOffresByID(req.session.user.id_utilisateur) ;
         res.render('commercant/mes-offres', {
             titre: 'Mes offres',
             pages,
@@ -61,13 +78,19 @@ exports.showCommercantOffres = async (req, res) => {
 };
 
 exports.showCommercantCommandes = async (req, res) => {
+    if(!req.session.user){
+        return res.redirect('/') ;
+    }
     const pages = [
         {titre : "Accueil", lien : "/Commercant"},
         {titre : "Mes offres", lien : "/mes-offres"},
         {titre : "Mes commandes", lien : "/commercant-commandes"},
+        {titre : "Profil", lien : "/commercant-profil"},
         {titre : "Contact", lien : "#contact"}];
 
-    const listCommandes = [1, 2, 3, 4, 5, 6]; 
+    const listCommandesCours = await Commande.searchCommandesCommerce(req.session.user.id_utilisateur,'', 'en cours', 'recent'); 
+    const listCommandesterminier = await Commande.searchCommandesCommerce(req.session.user.id_utilisateur,'', 'validée', 'recent'); 
+    
     css_files = ["commandes.css"] ;
 
 
@@ -75,28 +98,48 @@ exports.showCommercantCommandes = async (req, res) => {
         titre: 'Mes commandes',
         pages,
         css_files,
-        listCommandes
+        listCommandesCours, 
+        listCommandesterminier
     });
 };
 
 
 exports.showCommercantProfil = async (req, res) => {
+    if(!req.session.user){
+        return res.redirect('/') ;
+    }
     const pages = [
         {titre : "Accueil", lien : "/Commercant"},
         {titre : "Mes offres", lien : "/mes-offres"},
         {titre : "Mes commandes", lien : "/commercant-commandes"},
+        {titre : "Profil", lien : "/commercant-profil"},
         {titre : "Contact", lien : "#contact"}];
-
-    const listCommandes = [1, 2, 3, 4, 5, 6];
-    const avis = [1,2,3,4,5] ;
     css_files = ["profil.css"] ;
+    const commerce_info = await Commerce.getCommerceInfo(req.session.user.id_utilisateur);
+    const user = await utilisateur.getutilisateurByID(req.session.user.id_utilisateur) ;
+    // Version corrigée
+    let carte_commerce = await CommercePayment.getCommercePaymentByID(req.session.user.id_utilisateur);
+    if (!carte_commerce) {
+        throw new Error('Aucune carte de commerce trouvée');
+    }
+    
+    const ibanDecrypte = decrypt_data(carte_commerce.IBAN_commerce);
+    const last4 = ibanDecrypte.slice(-5);
 
-
+    // Création d'un nouvel objet sans écraser l'original
+    const resultat = {
+        ...carte_commerce,
+        IBAN_masque: ibanDecrypte,
+        last4: last4
+    };
+    console.log(resultat) ;
     res.render('commercant/commercant-profil', {
         titre: 'Profil Commerçant',
         pages,
         css_files,
-        list_avis:avis
+        user,
+        commerce_info,
+        resultat
     });
 };
 
@@ -193,6 +236,9 @@ exports.setStatus = async (req, res) => {
 
 
 exports.searchOffer = async (req, res) => {
+    if(!req.session.user){
+        return res.redirect('/') ;
+    }
     let { nom_offre, type, sort_by, statut } = req.query;
     if(nom_offre == undefined) nom_offre = " " ;
     console.log("nom_offre : ", nom_offre, " type : ", type, " sort_by : ", sort_by, " statut : ", statut) ;
@@ -201,6 +247,7 @@ exports.searchOffer = async (req, res) => {
         {titre : "Accueil", lien : "/Commercant"},
         {titre : "Mes offres", lien : "/mes-offres"},
         {titre : "Commandes", lien : "/commercant-commandes"},
+        {titre : "Profil", lien : "/commercant-profil"},
         {titre : "Contact", lien : "#contact"}];
     css_files = ["mes-offres.css"] ;
     res.render('commercant/mes-offres', {
@@ -211,3 +258,69 @@ exports.searchOffer = async (req, res) => {
     });
 }
 
+
+exports.validerCommande = async (req, res) => {
+    const {id_commande, code_validation} = req.body ;
+    const commande = await Commande.getCommandeByID(id_commande) ;
+    if (code_validation  == commande.code_validation){
+        await Commande.updateStatusCommande(id_commande, 'validée') ;
+        console.log('commande valider avec succes') ;
+        return res.redirect('/commercant-commandes');
+    } else {
+        console.log('commande non valider code validation incorrect ');
+        return res.redirect('/commercant-commandes') ;
+    }
+}
+
+
+exports.updateCommercantProfil = async (req, res) => {
+    try {
+        // 1. Validation des données
+        const { nom_commerce, adresse_commerce, ouverture, fermeture } = req.body;
+        
+        if (!nom_commerce || !adresse_commerce) {
+            req.flash('error', 'Le nom et l\'adresse du commerce sont obligatoires');
+            return res.redirect('/commercant-profil');
+        }
+        const result = await Commerce.updateCommerce(
+            req.session.user.id_utilisateur, // Utilisation de l'ID utilisateur dynamique
+            nom_commerce, 
+            adresse_commerce, 
+            ouverture, 
+            fermeture
+        );
+
+        // 4. Gestion du retour
+        if (result.changes > 0) {
+            console.log('success', 'Profil mis à jour avec succès');
+        } else {
+            console.log('info', 'Aucune modification effectuée');
+        }
+
+        return res.redirect('/commercant-profil');
+
+    } catch (err) {
+        console.error("Erreur lors de la mise à jour du commerce:", err);
+        
+        // Journalisation plus détaillée en production
+        if (process.env.NODE_ENV === 'production') {
+            logger.error('Update commerce failed - User: id_utilisateur , err');
+        }
+
+        console.log('error', 'Une erreur est survenue lors de la mise à jour');
+        return res.redirect('/commercant-profil');
+    }
+};
+
+
+exports.updateCommercePaiement = async (req, res ) =>{
+    try{
+        const {iban, bic, titulaire_compte, nom_banque, devise} = req.body ;
+        const commerce_ = await Commerce.getCommerceInfo(req.session.user.id_utilisateur);
+        await CommercePayment.updateInfoCarteCommercant(iban, bic, titulaire_compte, nom_banque, devise,commerce_.id_commerce)
+        return res.redirect('/commercant-profil');
+    } catch(err){
+        console.log('error', 'Une erreur est survenue lors de la mise à jour');
+        return res.redirect('/commercant-profil');
+    }
+}

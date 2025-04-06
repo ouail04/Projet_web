@@ -28,6 +28,60 @@ class Commerce{
         });
     }
     
+
+    static async updateCommerce(id_utilisateur, nom_commerce, adresse_commerce, ouverture, fermeture) {
+        return new Promise((resolve, reject) => {
+            const requete = `
+                UPDATE commerces 
+                SET nom_commerce = ?, 
+                    adresse_commerce = ?, 
+                    ouverture = ?, 
+                    fermeture = ? 
+                WHERE id_utilisateur = ?
+            `;
+            
+            db.run(
+                requete, 
+                [nom_commerce, adresse_commerce, ouverture, fermeture, id_utilisateur], 
+                function(err) {
+                    if (err) {
+                        console.error('Erreur SQL:', err.message);
+                        reject(new Error('Échec de la mise à jour du commerce'));
+                    } else {
+                        resolve({
+                            changes: this.changes,
+                            message: this.changes > 0 
+                                ? 'Commerce mis à jour avec succès' 
+                                : 'Aucun commerce trouvé avec cet ID'
+                        });
+                    }
+                }
+            );
+        });
+    }
+
+
+    static async getCommerceInfo(id_utilisateur){
+        return new Promise((resolve, reject) =>{
+            const requete = "SELECT * FROM commerces WHERE id_utilisateur = ?";
+    
+            db.get(requete, [id_utilisateur], (err, row) => {
+                if (err) {
+                    console.error("Erreur SQL :", err.message);
+                    return reject(err);  
+                }
+    
+                if (!row) {
+                    console.log("Aucune offre trouvée");
+                    return resolve(null); 
+                }
+    
+                return resolve(row);  
+            });
+        } );
+        
+    }
+    
 }
 
 module.exports = Commerce;
