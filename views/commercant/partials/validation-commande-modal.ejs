@@ -1,0 +1,32 @@
+<!-- Modal de validation -->
+<div class="modal fade" id="validateModal" tabindex="-1" aria-labelledby="validateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form action="/valider-commande" method="post" id="validationForm">
+        <input type="hidden" name="id_commande" id="id_commande">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="validateModalLabel">Validation de commande</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Demandez au client son code de validation à 6 chiffres :</p>
+                
+                <div class="mb-4">
+                    <input type="text" class="form-control code-input" id="validationCode" 
+                           placeholder="______" maxlength="6" inputmode="numeric" pattern="\d*" name="code_validation">
+                    <small class="text-muted">Code présent dans la page des commandes du client</small>
+                </div>
+                
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    Ne validez que lorsque le client a récupéré ses articles
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="submit" class="btn btn-success" id="confirmValidationBtn">Confirmer la validation</button>
+            </div>
+        </div>
+    </form>
+    </div>
+</div>
