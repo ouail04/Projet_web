@@ -3,41 +3,22 @@
     <div class="container">
         <h2 class="mb-4">Offres similaires</h2>
         <div class="row">
+
             <!-- Carte 1 -->
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <img src="chemin/vers/image1.jpg" class="card-img-top" alt="Panier de fruits">
-                    <div class="card-body">
-                        <h5 class="card-title">Panier de Fruits</h5>
-                        <p class="card-text">Prix : 10 €</p>
-                        <a href="#" class="btn btn-primary">Voir l'offre</a>
+             <% offresSimilaires.forEach((offre) => { %>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <img src="../../..<%= offre.offre_URL %>" class="card-img-top" alt="Panier de fruits">
+                        <div class="card-body">
+                            <h5 class="card-title"> <%= offre.nom_offre %> </h5>
+                            <p class="card-text">Prix : <%= offre.prix_apres %> €</p>
+                            <a href="/details-offre/<%= offre.id_offre %>" class="btn btn-primary">Voir l'offre</a>
+                        </div>
                     </div>
                 </div>
-            </div>
+            <% }) %>
+            <!-- Fin des cartes -->
 
-            <!-- Carte 2 -->
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <img src="chemin/vers/image2.jpg" class="card-img-top" alt="Panier de légumes">
-                    <div class="card-body">
-                        <h5 class="card-title">Panier de Légumes</h5>
-                        <p class="card-text">Prix : 8 €</p>
-                        <a href="#" class="btn btn-primary">Voir l'offre</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Carte 3 -->
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <img src="chemin/vers/image3.jpg" class="card-img-top" alt="Panier de pâtisseries">
-                    <div class="card-body">
-                        <h5 class="card-title">Panier de Pâtisseries</h5>
-                        <p class="card-text">Prix : 12 €</p>
-                        <a href="#" class="btn btn-primary">Voir l'offre</a>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </section>

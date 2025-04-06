@@ -1,18 +1,18 @@
 <!-- Onglet 2: Formulaire d'ajout -->
 <div class="tab-pane fade" id="add-card" role="tabpanel">
-    <form id="paymentForm">
+    <form id="paymentForm" action="/add-card-payment" method="post">
         <div class="row g-3">
             <!-- Titulaire de la carte -->
             <div class="col-12">
                 <label for="cardName" class="form-label">Titulaire de la carte</label>
-                <input type="text" class="form-control" id="cardName" placeholder="JEAN DUPONT" required>
+                <input type="text" class="form-control" id="cardName" placeholder="JEAN DUPONT" name="titulaire_carte" required>
             </div>
             
             <!-- Numéro de carte -->
             <div class="col-12">
                 <label for="cardNumber" class="form-label">Numéro de carte</label>
                 <div class="input-group">
-                    <input type="text" class="form-control" id="cardNumber" placeholder="4242 4242 4242 4242" required>
+                    <input type="text" class="form-control" id="cardNumber" placeholder="4242 4242 4242 4242" name="numero_carte_client" required>
                     <span class="input-group-text"><i class="bi bi-credit-card-2-front"></i></span>
                 </div>
             </div>
@@ -20,12 +20,12 @@
             <!-- Date et CVV -->
             <div class="col-md-6">
                 <label for="cardExpiry" class="form-label">Date d'expiration (MM/AA)</label>
-                <input type="text" class="form-control" id="cardExpiry" placeholder="12/25" required>
+                <input type="text" class="form-control" id="cardExpiry" placeholder="12/25" name="date_expiration" required>
             </div>
             <div class="col-md-6">
                 <label for="cardCvv" class="form-label">Cryptogramme (CVV)</label>
                 <div class="input-group">
-                    <input type="text" class="form-control" id="cardCvv" placeholder="123" required>
+                    <input type="text" class="form-control" id="cardCvv" placeholder="123" name="cvv" required>
                     <span class="input-group-text"><i class="bi bi-shield-lock"></i></span>
                 </div>
             </div>
@@ -33,7 +33,7 @@
             <!-- Type de carte -->
             <div class="col-md-6">
                 <label for="cardType" class="form-label">Type de carte</label>
-                <select class="form-select" id="cardType" required>
+                <select class="form-select" id="cardType" name="carte_type" required>
                     <option value="" selected disabled>Choisir...</option>
                     <option>Visa</option>
                     <option>Mastercard</option>
@@ -41,15 +41,6 @@
                 </select>
             </div>
             
-            <!-- Adresse de facturation -->
-            <div class="col-md-6">
-                <div class="form-check mt-4 pt-2">
-                    <input class="form-check-input" type="checkbox" id="differentBilling">
-                    <label class="form-check-label" for="differentBilling">
-                        Adresse de facturation différente
-                    </label>
-                </div>
-            </div>
             
             <!-- Boutons -->
             <div class="col-12 mt-3 d-flex justify-content-between">

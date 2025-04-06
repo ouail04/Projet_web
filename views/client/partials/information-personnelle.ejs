@@ -3,34 +3,34 @@
         <h5 class="mb-0"><i class="bi bi-person-folder me-2"></i> Informations personnelles</h5>
     </div>
     <div class="card-body">
-        <form>
+        <form action="/update-profil" method="post">
             <div class="row g-3">
                 <!-- Nom et Prénom -->
                 <div class="col-md-6">
                 <label for="lastName" class="form-label">Nom</label>
-                <input type="text" class="form-control" id="lastName" value="Dupont">
+                <input type="text" class="form-control" id="lastName" value="<%= user.nom %>" name="nom">
                 </div>
                 <div class="col-md-6">
                 <label for="firstName" class="form-label">Prénom</label>
-                <input type="text" class="form-control" id="firstName" value="Jean">
+                <input type="text" class="form-control" id="firstName" value="<%= user.prenom %>" name="prenom">
                 </div>
                 
                 <!-- Email -->
                 <div class="col-md-6">
                     <label for="email" class="form-label">Adresse e-mail</label>
-                    <input type="email" class="form-control" id="email" value="jean.dupont@example.com">
+                    <input type="email" class="form-control" id="email" value="<%= user.email %>" name = "email">
                 </div>
                 
                 <!-- Téléphone -->
                 <div class="col-md-6">
                     <label for="phone" class="form-label">Téléphone</label>
-                    <input type="tel" class="form-control" id="phone" value="+33 6 12 34 56 78">
+                    <input type="tel" class="form-control" id="phone" value="<%= user.telephone %>" name="telephone">
                 </div>
                 
                 <!-- Adresse -->
                 <div class="col-12">
                     <label for="address" class="form-label">Adresse</label>
-                    <input type="text" class="form-control" id="address" placeholder="123 Rue Anti-Gaspi, 75000 Paris">
+                    <input type="text" class="form-control" id="address" value ="<%= user.adresse %>" name="adresse">
                 </div>
                 
                 <!-- Mot de passe -->

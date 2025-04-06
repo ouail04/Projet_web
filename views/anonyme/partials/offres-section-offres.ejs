@@ -1,6 +1,6 @@
 <section class="offers-section py-5">
     <div class="container">
-        <h2 class="text-left mb-5">3 offres trouvées</h2>
+        <h2 class="text-left mb-5"><%= offers.length %> offres trouvées</h2>
 
         <!-- Liste des offres -->
         <div class="row">
@@ -12,7 +12,7 @@
                     <div class="card-body">
                         <h5 class="card-title"><%= offer.nom_offre %></h5>
                         <p class="card-text">Prix : <%= offer.prix_apres %> €</p>
-                        <a href="#" class="btn btn-primary">Voir l'offre</a>
+                        <a href="/details-offre/<%= offer.id_offre %>" class="btn btn-primary">Voir l'offre</a>
                     </div>
                 </div>
             </div>

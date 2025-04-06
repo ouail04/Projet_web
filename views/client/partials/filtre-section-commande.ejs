@@ -2,22 +2,22 @@
 <section class="filter-section py-5 bg-light">
     <div class="container">
         <h2 class="text-center mb-4">🔍 Barre de recherche et filtres</h2>
-        <form action="" method="GET">
+        <form action="/search-commande-client" method="GET">
             <div class="row">
                 <!-- Barre de recherche par nom de l'offre -->
                 <div class="col-md-12 mb-4">
-                    <input type="text" class="form-control" name="search" placeholder="Rechercher par nom de l'offre...">
+                    <input type="text" class="form-control" name="search" placeholder="<%= typeof search === 'undefined' || search === '' ? 'Recherche par nom de l\'offre...' : '' %>"
+                    value="<%= search || '' %>" >
                 </div>
 
                 <!-- Filtre par statut -->
                 <div class="col-md-6 mb-3">
                     <label for="statusFilter" class="form-label">Filtrer par statut</label>
-                    <select class="form-select" id="statusFilter" name="statusFilter">
-                        <option value="">Tous les statuts</option>
-                        <option value="en_attente">✅ En attente</option>
-                        <option value="en_cours">🚀 En cours</option>
-                        <option value="terminee">✅ Terminée</option>
-                        <option value="annulee">❌ Annulée</option>
+                    <select class="form-select" id="statusFilter" name="status">
+                        <option value="default" <%= (status || 'default') === 'default' ? 'selected' : '' %> >Tous les statuts</option>
+                        <option value="en attente" <%= (status || 'en attente') === 'en attente' ? 'selected' : '' %> >✅ En attente</option>
+                        <option value="en cours" <%= (status || 'en cours') === 'en cours' ? 'selected' : '' %> >🚀 En cours</option>
+                        <option value="validée" <%= (status || 'validée') === 'validée' ? 'selected' : '' %> >✅ Terminée</option>
                     </select>
                 </div>
 
@@ -25,8 +25,8 @@
                 <div class="col-md-6 mb-3">
                     <label for="dateSort" class="form-label">Trier par date</label>
                     <select class="form-select" id="dateSort" name="dateSort">
-                        <option value="recent">Du plus récent au plus ancien</option>
-                        <option value="oldest">Du plus ancien au plus récent</option>
+                        <option value="recent" <%= (dateSort || 'recent') === 'recent' ? 'selected' : '' %> >Du plus récent au plus ancien</option>
+                        <option value="oldest" <%= (dateSort || 'oldest') === 'oldest' ? 'selected' : '' %> >Du plus ancien au plus récent</option>
                     </select>
                 </div>
 

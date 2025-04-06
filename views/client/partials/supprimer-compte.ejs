@@ -42,7 +42,7 @@
 
 <!-- Modal Confirmation -->
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1">
-    <form action="">
+    <form action="/delete-account" method="post">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-danger text-white">
@@ -51,11 +51,11 @@
                 </div>
                 <div class="modal-body">
                     <p>Êtes-vous sûr de vouloir supprimer définitivement votre compte ?</p>
-                    <input type="password" class="form-control mt-3" id="accountPassword" placeholder="Votre mot de passe">
+                    <input type="password" class="form-control mt-3" id="accountPassword" placeholder="Votre mot de passe" name="mot_de_passe">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                    <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-danger" id="confirmDeleteBtn">
                         <i class="bi bi-trash3-fill me-1"></i> Supprimer
                     </button>
                 </div>

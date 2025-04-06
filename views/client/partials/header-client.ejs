@@ -32,13 +32,15 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <% pages.forEach((page) => { %>
-                        <li class="nav-item">
-                            <a class="nav-link <%= page.titre === titre ? 'active' : '' %>" 
-                               href="<%= page.lien %>"
-                               <%= page.titre === titre ? 'aria-current="page"' : '' %>>
-                                <%= page.titre %>
-                            </a>
-                        </li>
+                        <% if(page.titre !== 'Profil') { %>
+                            <li class="nav-item">
+                                <a class="nav-link <%= titre === page.titre ? 'active' : '' %>" 
+                                   href="<%= page.lien %>"
+                                   <%= titre === page.titre ? 'aria-current="page"' : '' %>>
+                                    <%= page.titre %>
+                                </a>
+                            </li>
+                        <% } %>
                     <% }); %>
                 </ul>
 
@@ -46,7 +48,7 @@
                 <div class="nav-item me-3">
                     <a href="#" class="nav-link" id="cart-icon">
                         <i class="fas fa-shopping-cart"></i>
-                        <span class="badge bg-danger" id="cart-count">3</span> <!-- Nombre d'articles -->
+                        <span class="badge bg-danger" id="cart-count"><%= panier.length %></span> <!-- Nombre d'articles -->
                     </a>
                 </div>
 

@@ -1,61 +1,69 @@
-    <!-- section de la liste des commandes -->
-    <section class="offers-section py-5">
-        <div class="container">
-            <h2 class="text-center mb-4">🛒 Mes commandes</h2>
-            <div class="row">
-                <% listCommandes.forEach((commande) =>{ %>
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100">
-                        <img src="chemin/vers/image1.jpg" class="card-img-top" alt="Panier de fruits">
-                        <div class="card-body">
-                            <h5 class="card-title">Panier de Fruits</h5>
-                            <p class="card-text">Prix : 10 €</p>
-                
-                            <!-- Badge de statut -->
-                            <div class="mb-3">
-                                <span class="badge bg-warning">En attente</span> <!-- Statut : En attente -->
+<!-- section de la liste des commandes -->
+<section class="offers-section py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">🛒 Mes commandes</h2>
+        <div class="row">
+            <% listCommandes.forEach((commande) => { %>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <img src="<%= commande.offre_URL %>" class="card-img-top" alt="<%= commande.nom_offre %>" style="height: 180px; object-fit: cover;">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title"><%= commande.nom_offre %> ×<%= commande.quantite %></h5>
+                        <p class="card-text">Prix total : <strong><%= (commande.prix_apres * commande.quantite).toFixed(2) %> €</strong></p>
+                        
+                        <!-- Affichage amélioré du code de validation -->
+                        <div class="mb-3 p-3 bg-light rounded">
+                            <p class="mb-1 text-muted small">Votre code de validation :</p>
+                            <div class="d-flex align-items-center">
+                                <code class="fs-4 fw-bold text-primary me-2"><%= commande.code_validation %></code>
+                                <button class="btn btn-sm btn-outline-secondary copy-btn" data-code="<%= commande.code_validation %>">
+                                    <i class="bi bi-clipboard"></i>
+                                </button>
                             </div>
-                
-                            <a href="#" class="btn btn-primary">Voir l'offre</a>
+                            <small class="text-muted">Présentez ce code lors du retrait</small>
+                        </div>
+                        
+                        <!-- Badge de statut amélioré -->
+                        <div class="mt-auto">
+                            <% if(commande.status == 'en attente') { %>
+                                <span class="badge bg-warning text-dark rounded-pill mb-2">
+                                    <i class="bi bi-clock me-1"></i> En attente
+                                </span>
+                            <% } else if (commande.status == 'en cours') { %>
+                                <span class="badge bg-info rounded-pill mb-2">
+                                    <i class="bi bi-arrow-repeat me-1"></i> En cours
+                                </span>
+                            <% } else { %>
+                                <span class="badge bg-success rounded-pill mb-2">
+                                    <i class="bi bi-check-circle me-1"></i> Terminée
+                                </span>
+                            <% } %>
+                            
+                            <a href="/details-offre/<%= commande.id_offre %>" class="btn btn-primary w-100 mt-2">
+                                <i class="bi bi-eye me-1"></i> Voir l'offre
+                            </a>
                         </div>
                     </div>
                 </div>
-                <% })%>
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100">
-                        <img src="chemin/vers/image2.jpg" class="card-img-top" alt="Panier de légumes">
-                        <div class="card-body">
-                            <h5 class="card-title">Panier de Légumes</h5>
-                            <p class="card-text">Prix : 12 €</p>
-                
-                            <!-- Badge de statut -->
-                            <div class="mb-3">
-                                <span class="badge bg-info">En cours</span> <!-- Statut : En cours -->
-                            </div>
-                
-                            <a href="#" class="btn btn-primary">Voir l'offre</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100">
-                        <img src="chemin/vers/image3.jpg" class="card-img-top" alt="Panier mixte">
-                        <div class="card-body">
-                            <h5 class="card-title">Panier Mixte</h5>
-                            <p class="card-text">Prix : 15 €</p>
-                
-                            <!-- Badge de statut -->
-                            <div class="mb-3">
-                                <span class="badge bg-success">Terminée</span> <!-- Statut : Terminée -->
-                            </div>
-                
-                            <a href="#" class="btn btn-primary">Voir l'offre</a>
-                        </div>
-                    </div>
-                </div>
-
-                
             </div>
+            <% }) %>
         </div>
-    </section>
+    </div>
+</section>
+
+<!-- Script pour copier le code -->
+<script>
+document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const code = this.getAttribute('data-code');
+        navigator.clipboard.writeText(code);
+        
+        // Feedback visuel
+        const icon = this.querySelector('i');
+        icon.className = 'bi bi-check';
+        setTimeout(() => {
+            icon.className = 'bi bi-clipboard';
+        }, 2000);
+    });
+});
+</script>

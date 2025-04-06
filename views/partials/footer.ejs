@@ -21,8 +21,6 @@
                     <% pages.forEach((page) =>{ %>
                     <li><a href="<%=page.lien %>" class="text-white text-decoration-none"><%= page.titre %></a></li>
                     <% }); %>
-                    <li><a href="/profil" class="text-white text-decoration-none">Mon profil</a></li>
-
                 </ul>
             </div>
 
@@ -31,7 +29,7 @@
             <div class="col-md-4 mb-4" id="contact">
                 <h5>Contactez-nous</h5>
                 <p class="text-muted">Envoyez-nous un message pour toute question ou suggestion.</p>
-                <form>
+                <form action="#">
                     <div class="mb-2">
                         <input type="text" class="form-control" placeholder="Votre nom" required>
                     </div>

@@ -1,13 +1,13 @@
 
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3"><i class="bi bi-cart-check me-2"></i> Validation des commandes</h1>
-        <div class="badge bg-primary rounded-pill">2 à valider</div>
+        <div class="badge bg-primary rounded-pill"><%= listCommandesCours.length %> à valider</div>
     </div>
 
     <!-- Liste des commandes -->
     <div class="row" id="ordersContainer">
 
-        
+        <% listCommandesCours.forEach((commande) =>{ %>
         <!-- Commande 1 -->
         <div class="col-12 mb-3">
             <div class="card order-card ready" data-order-id="1001" data-status="ready">
@@ -15,32 +15,22 @@
                     <!-- En-tête simplifié -->
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <div>
-                            <h5 class="card-title mb-0">#1001 - Marie Dupont</h5>
-                            <small class="text-muted">12/06/2023 09:30</small>
+                            <h5 class="card-title mb-0">#<%= commande.id_commande %> - <%= commande.nom %> <%= commande.prenom %></h5>
+                            <small class="text-muted"><%= commande.date_commande  %> </small>
                         </div>
                         <div class="text-end">
                             <span class="badge bg-success rounded-pill">À valider</span>
-                            <h4 class="mt-1 mb-0">24,50 €</h4>
                         </div>
                     </div>
         
                     <!-- Liste des produits (inchangée) -->
                     <div class="order-items mb-3">
                         <div class="d-flex align-items-center mb-2">
-                            <img src="produit1.jpg" alt="Produit" class="me-2" style="width:30px;height:30px">
+                            <img src="../../..<%= commande.offre_URL %>" alt="Produit" class="me-2" style="width:30px;height:30px">
                             <div class="flex-grow-1">
                                 <div class="d-flex justify-content-between">
-                                    <span>Panier de fruits (x2)</span>
-                                    <span class="text-nowrap">18,00 €</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-center">
-                            <img src="produit2.jpg" alt="Produit" class="me-2" style="width:30px;height:30px">
-                            <div class="flex-grow-1">
-                                <div class="d-flex justify-content-between">
-                                    <span>Pain bio (x1)</span>
-                                    <span class="text-nowrap">6,50 €</span>
+                                    <span><%= commande.nom_offre %> (x<%= commande.quantite %>)</span>
+                                    <span class="text-nowrap"><%= commande.prix_apres * commande.quantite  %> €</span>
                                 </div>
                             </div>
                         </div>
@@ -48,14 +38,12 @@
         
                     <!-- Bouton de validation centré -->
                     <div class="text-center">
-                        <button class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#validateModal" data-order-id="1001">
+                        <button type="button" class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#validateModal" data-order-id="<%= commande.id_commande %>" id="validerBouton">
                             <i class="bi bi-upc-scan me-2"></i>Valider la commande
                         </button>
                     </div>
                 </div>
             </div>
         </div>
-
-
-
+        <%}) %>
     </div>

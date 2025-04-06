@@ -1,5 +1,6 @@
 <% if (session && session.user){ %>
     <%- include('../client/partials/header-client') %>
+    <%- include('../client/partials/panier') %>
 <%} else {%>
     <%- include('partials/header-anonyme') %>
 <%} %>
@@ -7,5 +8,4 @@
 <%- include('partials/comment-ca-marche') %>
 <%- include('partials/offres-section-index') %>
 <%- include('partials/section-applle-commercant') %>
-<%- include('partials/avis') %>
 <%- include('../partials/footer') %>

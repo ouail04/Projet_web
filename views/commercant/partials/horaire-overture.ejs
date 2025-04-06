@@ -6,20 +6,13 @@
         <div class="row g-3">
             <div class="col-md-6">
                 <label for="openingTime" class="form-label">Heure d'ouverture</label>
-                <input type="time" class="form-control" id="openingTime" value="08:00">
+                <input type="time" class="form-control" id="openingTime" value="<%= commerce_info.ouverture %>" name="ouverture">
             </div>
             <div class="col-md-6">
                 <label for="closingTime" class="form-label">Heure de fermeture</label>
-                <input type="time" class="form-control" id="closingTime" value="19:00">
+                <input type="time" class="form-control" id="closingTime" value="<%= commerce_info.fermeture %>" name="fermeture">
             </div>
-            <div class="col-12">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="openOnWeekend">
-                    <label class="form-check-label" for="openOnWeekend">
-                        Ouvert le week-end
-                    </label>
-                </div>
-            </div>
+
         </div>
     </div>
 </div>

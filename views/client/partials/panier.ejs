@@ -3,10 +3,9 @@
 <div id="cart-sidebar">
     <h5>Mon panier</h5>
     <ul id="cart-items">
-        <!-- Les articles du panier seront injectés ici -->
-        <li>Panier de fruits - 10 €</li>
-        <li>Panier de légumes - 12 €</li>
-        <li>Panier mixte - 15 €</li>
+        <% panier.forEach((offre) =>{ %>
+            <li><%= offre.nom_offre%> x<%= offre.quantite %> - <%= offre.prix_apres %> € <a href="/delete-offre-panier/<%= offre.id_commande_offre %>"><i class="bi bi-trash3-fill me-2"></i></a> </li>
+        <% }); %>
     </ul>
-    <button class="btn btn-primary w-100">Passer la commande</button>
+    <a class="btn btn-primary w-100" href="/payment/<%= id_commande %>">Passer la commande</a>
 </div>
