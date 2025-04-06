@@ -1,0 +1,147 @@
+<%- include('partials/header-client') %>
+<div class="container mt-5">
+    <div class="row">
+      <div class="col-md-8">
+        <!-- Liste des cartes enregistrées -->
+        <form id="payment-form" action="/process-payment" method="POST" enctype="application/x-www-form-urlencoded">
+        <input type="hidden" name="id_commande" value="<%= commande.id_commande %>">
+        <input type="hidden" name="id_client" value="<%= commande.id_client %>">
+        <div class="card mb-4">
+          <div class="card-header bg-primary text-white">
+            <h5>Méthodes de paiement enregistrées</h5>
+          </div>
+          <div class="card-body">
+            <div class="list-group">
+                <% carte_payment.forEach((carte) => { %>
+              <div class="list-group-item">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="savedCard" id="card1" value="<%= carte.id_client_payment %>">
+                  <label class="form-check-label w-100" for="card1">
+                    <div class="d-flex justify-content-between">
+                        
+                        <span>•••• •••• •••• <%= carte.numero_carte_client.slice(-4) %></span>
+                        <span><%= carte.carte_type %> - Expire le <%= carte.date_expiration %></span>
+    
+                    </div>
+                  </label>
+                </div>
+              </div>
+              <% }); %>
+            
+
+
+            </div>
+          </div>
+        </div>
+  
+        <!-- Formulaire pour nouvelle carte -->
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            <h5>Nouvelle carte de paiement</h5>
+          </div>
+          <div class="card-body">
+            
+              <div class="mb-3">
+                <label for="card-number" class="form-label">Numéro de carte</label>
+                <input type="text" class="form-control" id="card-number" placeholder="4242 4242 4242 4242" name="numero_carte" value="4242424242424242" required>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="card-expiry" class="form-label">Date d'expiration</label>
+                  <input type="text" class="form-control" id="card-expiry" placeholder="MM/AA" name="date_expiration" value="12/25" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="card-cvc" class="form-label">Cryptogramme</label>
+                  <input type="text" class="form-control" id="card-cvc" placeholder="CVC" name="CVC" value="123" required>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="card-name" class="form-label">Nom sur la carte</label>
+                <input type="text" class="form-control" id="card-name" name="titulaire_carte" value="John Doe" required>
+              </div>
+
+                <div class="col-md-6">
+                  <label for="cardType" class="form-label">Type de carte</label>
+                  <select class="form-select" id="cardType" name="type_carte" required>
+                      <option value="" selected disabled>Choisir...</option>
+                      <option>Visa</option>
+                      <option>Mastercard</option>
+                      <option>American Express</option>
+                  </select>
+              </div>
+
+              <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="save-card" name="save_card">
+                <label class="form-check-label" for="save-card">Enregistrer cette carte pour mes prochains paiements</label>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+  
+      <div class="col-md-4">
+        <!-- Récapitulatif de commande -->
+        <div class="card sticky-top" style="top: 20px;">
+          <div class="card-header bg-primary text-white">
+            <h5>Récapitulatif</h5>
+          </div>
+          <div class="card-body">
+            <ul class="list-group list-group-flush mb-3">
+                <% panier.forEach((pan) => {%>
+                <li class="list-group-item d-flex justify-content-between">
+                  <span><%= pan.nom_offre %> x <%= pan.quantite %></span>
+                  <span><%= pan.prix_apres * pan.quantite %> €</span>
+                </li>
+                <%}) %>
+            </ul>
+            <div class="d-flex justify-content-between fw-bold fs-5">
+              <span>Total</span>
+              <span><%= commande.prix_totale %> €</span>
+            </div>
+            <button class="btn btn-success w-100 mt-3" data-bs-toggle="modal" data-bs-target="#confirmationModal">
+              Payer maintenant
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal de confirmation -->
+  <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmationModalLabel">Confirmer le paiement</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Vous êtes sur le point de payer <strong> <%= commande.prix_totale %> €</strong>.</p>
+          <p>Confirmez-vous ce paiement ?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+          <button type="button" class="btn btn-primary" id="confirm-payment">Confirmer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    // Validation du formulaire
+    document.getElementById('confirm-payment').addEventListener('click', function() {
+      const form = document.getElementById('payment-form');
+      const useSavedCard = document.querySelector('input[name="savedCard"]:checked') !== null;
+      
+      if (!useSavedCard && !form.checkValidity()) {
+        alert('Veuillez remplir tous les champs obligatoires');
+        return;
+      } else{
+        form.submit();
+      }
+  
+      
+    });
+  </script>
+<%- include('../partials/footer') %>
