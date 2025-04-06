@@ -43,11 +43,7 @@ function initializeDatabase() {
             siret TEXT NOT NULL UNIQUE,
             ouverture TIME NOT NULL,
             fermeture TIME NOT NULL,
-            ouvert_weekend BOOLEAN NOT NULL DEFAULT 0,
-            ouverture_weekend TIME,
-            fermeture_weekend TIME,
             id_utilisateur INTEGER NOT NULL,
-            avis_moyenne REAL DEFAULT 0,
             FOREIGN KEY (id_utilisateur) REFERENCES utilisateurs(id_utilisateur)
         );`);
 
@@ -126,26 +122,6 @@ function initializeDatabase() {
             FOREIGN KEY (id_commerce_payment) REFERENCES commerce_payment(id_commerce_payment));
         `);
 
-        // Table avis
-        db.run(`CREATE TABLE IF NOT EXISTS avis (
-            id_avis INTEGER PRIMARY KEY AUTOINCREMENT,
-            id_commerce INTEGER NOT NULL,
-            id_client INTEGER NOT NULL,
-            note INTEGER NOT NULL CHECK(note BETWEEN 1 AND 5),
-            commentaire TEXT,
-            date_avis DATETIME DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (id_commerce) REFERENCES commerces(id_commerce),
-            FOREIGN KEY (id_client) REFERENCES utilisateurs(id_utilisateur));
-        `);
-
-        // NOUVELLE TABLE: contact
-        db.run(`CREATE TABLE IF NOT EXISTS contact (
-            id_contact INTEGER PRIMARY KEY AUTOINCREMENT,
-            nom TEXT NOT NULL,
-            email TEXT NOT NULL,
-            message TEXT NOT NULL,
-            date_envoi DATETIME DEFAULT CURRENT_TIMESTAMP);
-        `);
         db.on('trace', console.log);
         console.log('Toutes les tables ont été créées avec succès');
     });
