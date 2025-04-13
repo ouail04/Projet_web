@@ -122,7 +122,12 @@ exports.showOffersPage = async (req, res) => {
             ville : '',
             session,
             panier,
-            id_commande
+            id_commande,
+            messages: {
+                success: req.flash('success'),
+                error: req.flash('error')
+            }
+            
         });
     }
     catch (error) {

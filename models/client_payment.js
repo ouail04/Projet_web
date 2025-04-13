@@ -6,6 +6,13 @@ const db = new sqlite3.Database(DB_PATH, (err) => {
     if (err) {
         console.error('Erreur de connexion à la base de données:', err.message);
     } else {
+        db.run("PRAGMA foreign_keys = ON;", (err) => {
+            if (err) {
+                console.error('Erreur lors de l’activation des clés étrangères:', err.message);
+            } else {
+                console.log('Clés étrangères activées avec succès');
+            }
+        });
         console.log('Connecté à la base de données SQLite Commerce');
     }
 });

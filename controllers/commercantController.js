@@ -57,7 +57,11 @@ exports.showCommercantOffres = async (req, res) => {
             nom_offre : "",
             type : "all",
             sort_by : "all",
-            statut : "all"
+            statut : "all",
+            messages: {
+                success: req.flash('success'),
+                error: req.flash('error')
+            }
         });
 
 
@@ -99,7 +103,11 @@ exports.showCommercantCommandes = async (req, res) => {
         pages,
         css_files,
         listCommandesCours, 
-        listCommandesterminier
+        listCommandesterminier,
+        messages: {
+            success: req.flash('success'),
+            error: req.flash('error')
+        }
     });
 };
 
@@ -118,7 +126,7 @@ exports.showCommercantProfil = async (req, res) => {
     const commerce_info = await Commerce.getCommerceInfo(req.session.user.id_utilisateur);
     const user = await utilisateur.getutilisateurByID(req.session.user.id_utilisateur) ;
     // Version corrigée
-    let carte_commerce = await CommercePayment.getCommercePaymentByID(req.session.user.id_utilisateur);
+    let carte_commerce = await CommercePayment.getCommercePaymentByID(commerce_info.id_commerce) ;
     if (!carte_commerce) {
         throw new Error('Aucune carte de commerce trouvée');
     }
@@ -139,7 +147,11 @@ exports.showCommercantProfil = async (req, res) => {
         css_files,
         user,
         commerce_info,
-        resultat
+        resultat,
+        messages: {
+            success: req.flash('success'),
+            error: req.flash('error')
+        }
     });
 };
 
@@ -155,12 +167,14 @@ exports.addOffer = [
             }
             
             const imageURL = '/static/upload/' + req.file.filename;
-            const id_commerce = req.session.user?.id_commerce;
+            const id_commerce = req.session.user?.id_utilisateur;
             Offre.addNewOffre({id_commerce, nom_offre, type, prix_avant, prix_apres, date_expiration, 
                 disponibilite, description, condition, statut, imageURL,disponibilite  }) ;
             console.error('Offre ajouter avec succees');
+            req.flash('success', 'Offre ajoutée avec succès');
             return res.redirect('/mes-offres');
         } catch (error) {
+            req.flash('error', 'Une erreur est survenue lors de l\'ajout de l\'offre');
             console.log('Erreur:', error);
             return res.redirect('/mes-offres');
         }
@@ -179,7 +193,7 @@ exports.editOffer = [telechargerImage, async (req, res) => {
             image_url = '/static/upload/' + req.file.filename;
             console.log('Nouvelle image:', image_url);
             try {
-                const image_url_delete = await offre.getImageUrl(id_offre) ;
+                const image_url_delete = await Offre.getImageUrl(id_offre) ;
                 await deleteImage(image_url_delete.offre_URL);
                 console.log("suppression avec succes")  ;
             } catch (error) {
@@ -190,10 +204,10 @@ exports.editOffer = [telechargerImage, async (req, res) => {
 
         await Offre.updateOffer({
             id_offre, 
-            nom_offre, // Nom corrigé
+            nom_offre, 
             type, 
             prix_avant, 
-            prix_apres, // Nom corrigé
+            prix_apres, 
             date_expiration, 
             disponibilite, 
             description, 
@@ -201,8 +215,10 @@ exports.editOffer = [telechargerImage, async (req, res) => {
             statut,
             imageURL: image_url
         });
+        req.flash('success', 'Offre mise à jour avec succès');
         return res.redirect('/mes-offres');
     } catch(err) {
+        req.flash('error', 'Une erreur est survenue lors de la mise à jour de l\'offre');
         console.error('Erreur:', err);
         return res.redirect('/mes-offres');
     }
@@ -212,11 +228,13 @@ exports.editOffer = [telechargerImage, async (req, res) => {
 exports.deleteOffer = async (req, res) => {
     try {
         const { id_offre } = req.body;
-        const image_url_delete = await offre.getImageUrl(id_offre) ;
+        const image_url_delete = await Offre.getImageUrl(id_offre) ;
         await deleteImage(image_url_delete.offre_URL);
         await Offre.deleteOffre(id_offre) ;
+        req.flash('success', 'Offre supprimée avec succès');
         return res.redirect('/mes-offres');
     } catch(err) {
+        req.flash('error', 'Une erreur est survenue lors de la suppression de l\'offre');
         console.error('Erreur:', err);
         return res.redirect('/mes-offres');
     }
@@ -227,8 +245,10 @@ exports.setStatus = async (req, res) => {
     try {
         const { id_offre, statut } = req.body;
         await Offre.setStatus(id_offre, statut) ;
+        req.flash('success', 'Statut de l\'offre mis à jour avec succès');
         return res.redirect('/mes-offres');
     } catch(err) {
+        req.flash('error', 'Une erreur est survenue lors de la mise à jour du statut de l\'offre');
         console.error('Erreur:', err);
         return res.redirect('/mes-offres');
     }
@@ -264,10 +284,10 @@ exports.validerCommande = async (req, res) => {
     const commande = await Commande.getCommandeByID(id_commande) ;
     if (code_validation  == commande.code_validation){
         await Commande.updateStatusCommande(id_commande, 'validée') ;
-        console.log('commande valider avec succes') ;
+        req.flash('success','commande valider avec succes') ;
         return res.redirect('/commercant-commandes');
     } else {
-        console.log('commande non valider code validation incorrect ');
+        req.flash('error','commande non valider code validation incorrect ');
         return res.redirect('/commercant-commandes') ;
     }
 }
@@ -292,9 +312,9 @@ exports.updateCommercantProfil = async (req, res) => {
 
         // 4. Gestion du retour
         if (result.changes > 0) {
-            console.log('success', 'Profil mis à jour avec succès');
+            req.flash('success', 'Profil mis à jour avec succès');
         } else {
-            console.log('info', 'Aucune modification effectuée');
+            req.flash('error', 'Une erreur est survenue lors de la mise à jour');
         }
 
         return res.redirect('/commercant-profil');
@@ -318,9 +338,11 @@ exports.updateCommercePaiement = async (req, res ) =>{
         const {iban, bic, titulaire_compte, nom_banque, devise} = req.body ;
         const commerce_ = await Commerce.getCommerceInfo(req.session.user.id_utilisateur);
         await CommercePayment.updateInfoCarteCommercant(iban, bic, titulaire_compte, nom_banque, devise,commerce_.id_commerce)
+        req.flash('success', 'Les informations de paiement ont été mises à jour avec succès.');
         return res.redirect('/commercant-profil');
     } catch(err){
         console.log('error', 'Une erreur est survenue lors de la mise à jour');
+        req.flash('error', 'Une erreur est survenue lors de la mise à jour des informations bancaires.');
         return res.redirect('/commercant-profil');
     }
 }

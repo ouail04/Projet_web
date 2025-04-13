@@ -33,6 +33,7 @@
 </head>
 <body>
     <div class="container py-5">
+        <%- include('alerts') %>
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <h1 class="text-center mb-4"><i class="fas fa-user-plus me-2"></i>Formulaire d'inscription</h1>
@@ -140,25 +141,7 @@
             }
         }
         
-        
-        // Validation du formulaire:
-        /*
-        document.getElementById('registrationForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Vérification de la correspondance des mots de passe
-            
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            
-            if (password !== confirmPassword) {
-                alert("Les mots de passe ne correspondent pas !");
-                return;
-            }
-            this.submit();
-            
-        });
-        */
     </script>
+    <script src="../../static/js/confirme-password.js"></script>
 </body>
 </html>

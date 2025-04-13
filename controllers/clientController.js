@@ -10,6 +10,7 @@ const {encrypt_data, decrypt_data} = require('./security') ;
 
 const CommercePayment = require('../models/CommercePayment');
 const utilisateur = require('../models/Utilisateur');
+const e = require('express');
 
 exports.showCommandesPage = async (req, res) => {
     if(!req.session.user){
@@ -53,7 +54,6 @@ exports.showProfilPage = async (req, res) => {
     if(!req.session.user){
         return res.redirect('/') ;
     }
-
     const pages = [
         {titre : "Accueil", lien : "/"},
         {titre : "Offres", lien : "/offres"},
@@ -83,21 +83,22 @@ exports.showProfilPage = async (req, res) => {
         panier,
         id_commande,
         cards,
-        user
+        user,
+        messages: {
+            success: req.flash('success'),
+            error: req.flash('error')
+        }
 
     });
 };
 
 
 exports.searchOfferClient = async (req, res) => {
-    if(!req.session.user){
-        return res.redirect('/') ;
-    }
     let { nom_offre, type, sorted_experation = 'all', sorted_prix, ville } = req.query;
     type  == '' ? type = 'all' : type = type ;
     sorted_experation == '' ? sorted_experation = 'all' : sorted_experation = sorted_experation ;
     console.log('Paramètres de recherche:', { nom_offre, type, sorted_experation, sorted_prix, ville });
-
+    let session ;
     const pages = [
         { titre: "Accueil", lien: "/" },
         { titre: "Offres", lien: "/offres" },
@@ -115,7 +116,14 @@ exports.searchOfferClient = async (req, res) => {
     
     try {
         const offers = await offre.searchOfferClient(nom_offre, type, sorted_experation, sorted_prix, ville);
-        const panier = await Commande.getPanierByID(req.session.user.id_utilisateur);
+        if(req.session.user){
+            const panier = await Commande.getPanierByID(req.session.user.id_utilisateur);
+            session = req.session.user ;
+        } else {
+            panier = [] ;
+            session = null ;
+        }
+     
         let id_commande ;
         panier.length > 0 ? id_commande = panier[0].id_commande : id_commande = null ;
         res.render('anonyme/offres', {
@@ -123,7 +131,8 @@ exports.searchOfferClient = async (req, res) => {
             pages: pages,
             css_files: css_files,
             offers: offers,
-            nom_offre, type, sorted_experation, sorted_prix, ville, panier, id_commande
+            session : session,
+            nom_offre, type, sorted_experation, sorted_prix, ville, panier, id_commande, 
         });
     } catch (error) {
         console.error("Erreur lors de la recherche d'offres:", error);
@@ -134,7 +143,7 @@ exports.searchOfferClient = async (req, res) => {
 
 exports.showDetailsOffer = async (req, res) => {
     if(!req.session.user){
-        return res.redirect('/') ;
+        return res.redirect('/login') ;
     }
     const id_offre = req.params.id; 
     try {
@@ -158,7 +167,11 @@ exports.showDetailsOffer = async (req, res) => {
             offreDetails,
             offresSimilaires,
             panier,
-            id_commande
+            id_commande,
+            messages: {
+                success: req.flash('success'),
+                error: req.flash('error')
+            }
         });
     } catch (error) {
         console.error("Erreur lors de la recherche d'offres:", error);
@@ -186,13 +199,16 @@ exports.addToPanier = async (req, res) => {
             }
             const id_commande_offres = await Commande_Offre.addCommande_Offre(id_commande, id_offre, quantite);
             await offre.updateDiponibilite(nouvelle_dispo, id_offre);
+            req.flash('success', 'Offre ajoutée au panier avec succès.');
             return res.redirect('/details-offre/' + id_offre);
         } else{
+            req.flash('error', 'Quantité non disponible.');
             return res.redirect('/details-offre/' + id_offre);
         }
         
 
     } catch (error) {
+        req.flash('error', 'Erreur lors de l\'ajout au panier.');
         console.error("Erreur lors de l'ajout au panier:", error);
         res.status(500).render('erreur', { message: "Une erreur est survenue lors de l'ajout au panier." });
     }
@@ -209,8 +225,10 @@ exports.deleteOfferPanier = async (req, res) => {
         const prix_totale = commande_attente.prix_totale - (offre_.prix_apres * commande_offre.quantite);
         await Commande.updatePrix(commande_attente.id_commande, prix_totale);
         await offre.updateDiponibilite(commande_offre.quantite + offre_.disponibilite_actuelle, offre_.id_offre) ;
+        req.flash('success', 'Offre supprimée du panier avec succès.');
         return res.redirect('/offres');
     } catch (error) {
+        req.flash('error', 'Erreur lors de la suppression de l\'offre du panier.');
         console.error("Erreur lors de la suppression de l'offre du panier:", error);
         res.status(500).render('erreur', { message: "Une erreur est survenue lors de la suppression de l'offre." });
     }
@@ -228,6 +246,10 @@ exports.showPaymentPage = async (req, res) => {
             {titre : "Commandes", lien : "/commandes"},
             {titre : "Contact", lien : "#contact"}];
         const id_commande = req.params.id;
+        if(!id_commande){
+            req.flash('error', 'Une commande est nécessaire pour accéder à cette page.');
+            return res.redirect('/offres') ;
+        }
         const commande = await Commande.getCommandeByID(id_commande);
         const panier = await Commande.getPanierByID(req.session.user.id_utilisateur);
         const carte_payment = await client_payment.getClientPaymentByID(req.session.user.id_utilisateur);
@@ -261,6 +283,7 @@ exports.processPayment = async (req, res) => {
             console.log("1Paiement réussi avec la carte enregistrée :", resultat.clientSecret);
             await Transaction.addTransaction(banque_commerce.id_commerce_payment, savedCard, prix_totale);
             await Commande.updateStatusCommande(id_commande, 'en cours');
+            req.flash('success', 'Paiement effectué avec succès.');
             return res.redirect('/offres');
         } else{
             console.error("Erreur de paiement :", resultat.error);
@@ -273,6 +296,7 @@ exports.processPayment = async (req, res) => {
             const id_client_payment = await client_payment.addClientPayment(numero_carte, date_expiration, CVC, titulaire_carte, type_carte, id_client);
             await Transaction.addTransaction(banque_commerce.id_commerce_payment,id_client_payment, prix_totale);
             await Commande.updateStatusCommande(id_commande, 'en cours');
+            req.flash('success', 'Paiement effectué avec succès.');
             return res.redirect('/offres');
         } else {
             console.error("Erreur de paiement :", resultat.error);
@@ -285,6 +309,7 @@ exports.processPayment = async (req, res) => {
             const id_client_payment = await client_payment.addClientPayment(numero_carte, date_expiration, CVC, titulaire_carte, type_carte, id_client);
             await Transaction.addTransaction(banque_commerce.id_commerce_payment, id_client_payment, prix_totale);
             await Commande.updateStatusCommande(id_commande, 'en cours');
+            req.flash('success', 'Paiement effectué avec succès.');
             return res.redirect('/offres');
         } else {
             console.error("Erreur de paiement :", resultat.error);
@@ -335,22 +360,54 @@ exports.searchCommandeClient = async (req, res) =>{
 }
 
 
-exports.updateProfil = async(req, res) => {
-    const {id_utilisateur, adresse, nom, prenom, telephone, email} = req.body ;
-    console.log("adresse : ", adresse);
-    await utilisateur.updateUtilisateur(req.session.user.id_utilisateur, adresse, nom, prenom, telephone, email) ;
-    return res.redirect('/profil') ;
-}
+exports.updateProfil = async (req, res) => {
+    try {
+        const { adresse, nom, prenom, telephone, email } = req.body;
+
+        await utilisateur.updateUtilisateur(
+            req.session.user.id_utilisateur,
+            adresse,
+            nom,
+            prenom,
+            telephone,
+            email
+        );
+
+        req.flash('success', 'Profil mis à jour avec succès.');
+
+        if (req.session.user.type_utilisateur === 'client') {
+            return res.redirect('/profil');
+        } else {
+            return res.redirect('/commercant-profil');
+        }
+
+    } catch (err) {
+        console.error('Erreur lors de la mise à jour du profil :', err);
+        req.flash('error', 'Une erreur est survenue lors de la mise à jour du profil.');
+
+        if (req.session.user.type_utilisateur === 'client') {
+            return res.redirect('/profil');
+        } else {
+            return res.redirect('/commercant-profil');
+        }
+    }
+};
+
 
 
 exports.updatePasword = async(req, res) =>{
     const {currentPassword, newPassword} = req.body ;
+    
     const client = await utilisateur.getutilisateurByID(req.session.user.id_utilisateur);
 
     const isEgaux = await bcrypt.compare(currentPassword, client.mot_de_passe);
     if(!isEgaux){
-        console.log("ancienne mot de passe incorrect") ;
-        return res.redirect('profil');
+        req.flash('error', 'Ancien mot de passe incorrect.');
+        if(req.session.user.type_utilisateur == 'client'){
+            return res.redirect('profil');
+        } else{
+            return res.redirect('commercant-profil');
+        }
     } else{
         await utilisateur.updatePassword(req.session.user.id_utilisateur,newPassword ) ;
         return res.redirect('/logout') ;
@@ -361,8 +418,10 @@ exports.addCartePayment = async (req, res) =>{
     try{
         const {titulaire_carte, numero_carte_client, date_expiration, cvv, carte_type} = req.body ;
         await client_payment.addClientPayment(numero_carte_client, date_expiration, cvv, titulaire_carte, carte_type, req.session.user.id_utilisateur)
+        req.flash('success', 'Carte de paiement ajoutée avec succès.');
         return res.redirect('/profil') ;
     } catch(err){
+        req.flash('error', 'Erreur lors de l\'ajout de la carte de paiement.');
         console.log('erreur lors de l ajout de carte de paiement : ',err  );
         return res.redirect('/profil') ;
     }
@@ -370,7 +429,14 @@ exports.addCartePayment = async (req, res) =>{
 
 
 exports.deleteCartePaiement = async (req, res) =>{
-    const id_client_payment = req.params.id ;
-    await client_payment.deleteCartePaiement(id_client_payment);
-    return res.redirect('/profil') ;
+   try{
+        const id_client_payment = req.params.id ;
+        await client_payment.deleteCartePaiement(id_client_payment);
+        req.flash('success', 'Carte de paiement supprimée avec succès.');
+        return res.redirect('/profil') ;
+   } catch(err){
+        req.flash('error', 'Erreur lors de la suppression de la carte de paiement.');
+        console.log('erreur lors de la suppression de carte de paiement : ',err  );
+        return res.redirect('/profil') ;
+   }
 }
