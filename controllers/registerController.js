@@ -3,14 +3,30 @@ const commerce = require('../models/Commerce')
 const CommercePayment =  require('../models/CommercePayment')
 const anonymeController = require('./anonymeController');
 const bcrypt = require('bcrypt');
+const { v4: uuidv4 } = require('uuid');
+const nodemailer = require('nodemailer');
+
+
 
 exports.showRegisterPage = async (req, res) => {
-    res.render('partials/register');
+    res.render('partials/register',
+        {
+            messages: {
+                success: req.flash('success'),
+                error: req.flash('error')
+            }
+        }
+    );
 };
 
 
 exports.showCommerceRegisterPage = async (req, res) => {
-    res.render('commercant/commerce-register');
+    res.render('commercant/commerce-register',{
+        messages: {
+            success: req.flash('success'),
+            error: req.flash('error')
+        }
+    });
 };
 
 exports.showCommercePaymentRegisterPage = async (req, res) => {
@@ -18,7 +34,13 @@ exports.showCommercePaymentRegisterPage = async (req, res) => {
 };
 
 exports.showLoginPage = async (req, res) => {
-    res.render('partials/login');
+    res.render('partials/login',{
+        messages: {
+            success: req.flash('success'),
+            error: req.flash('error')
+        }
+    }
+    );
 };
 
 // fonctions 
@@ -26,6 +48,7 @@ exports.createAccount = async (req, res) => {
     try {
         const { nom, prenom, email, telephone, mot_de_passe, confirmation_mot_de_passe, type_utilisateur, adresse } = req.body;
         if (mot_de_passe !== confirmation_mot_de_passe) {
+            req.flash('error', 'Les mots de passe ne correspondent pas !');
             return res.render('register', { error: "Les mots de passe ne correspondent pas !" });
         }
 
@@ -38,6 +61,7 @@ exports.createAccount = async (req, res) => {
             return res.redirect('/commerce-register');
         }
     } catch (err) {
+        req.flash('error', 'Ce email est déjà utilisé !');
         console.error("Create account error " + err);
         return res.redirect('/register');
     }
@@ -64,8 +88,10 @@ exports.addNewCommerce = async (req, res) =>{
         const id_utilisateur = req.session.user?.id_utilisateur;
         const commerceId = await commerce.addNewCommerceNoWeekend({id_utilisateur, nom_commerce,adresse_commerce,siret,ouverture,fermeture});
         req.session.user.id_commerce = commerceId ; 
+        req.flash('success', 'Commerce ajouté avec succès !');
         return res.redirect('/commerce-payment-register');
     } catch (err){
+        req.flash('error', 'SIRET déjà utilisé !');
         console.error(err);
         return res.redirect('/commerce-register');
     }
@@ -104,9 +130,11 @@ exports.login = async (req, res) => {
             }
         }else{
             console.log("id : " + id_utilisateur);
+            req.flash('error', 'Email ou mot de passe incorrect');
             return res.redirect('/login');
         }
     } catch(err){
+        req.flash('error', 'Email ou mot de passe incorrect');
         console.log("erreur message : " + err);
         return res.redirect('/login');
     }
@@ -162,5 +190,78 @@ function redirectBack(req, res) {
         ? res.redirect('/profil') 
         : res.redirect('/commercant-profil');
 }
+
+
+
+// modifier mot de passe client
+exports.getForgotPasswordPage = (req, res) => {
+    res.render('partials/forgot-password', { message: null });
+};
+
+// Envoie le lien par mail
+exports.sendResetLink = async (req, res) => {
+    const { email } = req.body;
+    const user = await utilisateur.findEmail(email); // À adapter
+
+    if (user.count === 0) {
+        return res.render('auth/forgot-password', { message: "Aucun utilisateur trouvé." });
+    }
+
+    const token = uuidv4();
+    const expiresAt = new Date(Date.now() + 3600000); // expire dans 1h
+    console.log("expiresAt : " + expiresAt);
+    await utilisateur.saveResetToken(email, token, expiresAt);
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'ouaizouina02@gmail.com',
+            pass: 'ovpktjbjxiqvkvfc'
+        },
+        tls: {
+            rejectUnauthorized: false // 👈 Ignore le certificat auto-signé
+        }
+    });
+
+    const resetUrl = `http://localhost:3000/reset-password/${token}`; // À adapter selon votre route
+    await transporter.sendMail({
+        from: 'noreply@gaspillage.com',
+        to: email,
+        subject: 'Réinitialisation de mot de passe',
+        html: `<p>Cliquez <a href="${resetUrl}">ici</a> pour réinitialiser votre mot de passe.</p>`
+    });
+
+    res.render('partials/forgot-password', { message: "Email envoyé avec succès." });
+};
+
+
+
+// Affiche le formulaire de nouveau mot de passe
+exports.getResetPasswordPage = async (req, res) => {
+    const token = req.params.token;
+    res.render('partials/reset-password', { token });
+};
+
+
+
+exports.postResetPassword = async (req, res) => {
+    const { token } = req.params;
+    const { newPassword } = req.body;
+
+    const user = await utilisateur.findByResetToken(token);
+    const dateNow = new Date();
+    const expiresAt = new Date(user.reset_token_expires); // Assurez-vous que cette propriété existe dans votre modèle
+    console.log("dateNow : " + dateNow);
+    console.log("expiresAt : " + expiresAt);
+    console.log("user : " + user);
+    console.log("compare : " + (new Date(user.reset_token_expires) < new Date(dateNow.toISOString())));
+    if (!user || new Date(user.reset_token_expires) < new Date(dateNow.toISOString())) {
+        return res.render('partials/reset-password', { token, message: "Lien expiré ou invalide." });
+    }
+
+    await utilisateur.updatePasswordByEmail(user.email, newPassword);
+    await utilisateur.clearResetToken(user.email);
+    req.flash('success', 'Mot de passe modifié avec succès.');
+    return res.redirect('/login'); // Redirige vers la page de connexion
+};
 
 
