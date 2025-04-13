@@ -15,6 +15,9 @@ app.set('views', path.join(__dirname, 'views')); // Pointe vers le dossier views
 // Middleware pour fichiers statiques (IMPORTANT)
 app.use('/static', express.static(path.join(__dirname, 'static'))); // Pointe vers le dossier static
 app.use(express.urlencoded({limit:'10mb', extended: true })); // pour les formulaire htmls
+const flash = require('connect-flash');
+app.use(flash());
+
 
 
 
@@ -79,6 +82,19 @@ app.get('/delete-card-payment/:id', clientController.deleteCartePaiement);
 app.post('/update-commercant-profil', commercantController.updateCommercantProfil);
 app.post('/update-commerce-payment', commercantController.updateCommercePaiement)
 app.post('/delete-account', registerController.deleteAccount);
+app.get('/payment/', clientController.showPaymentPage);
+
+
+// modifier mot de passe client
+app.get('/forgot-password', registerController.getForgotPasswordPage);
+app.post('/forgot-password', registerController.sendResetLink);
+app.get('/reset-password/:token', registerController.getResetPasswordPage);
+app.post('/reset-password/:token', registerController.postResetPassword);
+
+
+
+
+
 
 app.listen(port, () => {
     console.log(`Serveur démarré sur http://localhost:${port}`);
