@@ -16,9 +16,20 @@ const db = new sqlite3.Database(DB_PATH, (err) => {
         console.error('Erreur de connexion à la base de données:', err.message);
     } else {
         console.log('Connecté à la base de données SQLite');
+        // ✅ Active les clés étrangères ici, juste après la connexion
+        db.run("PRAGMA foreign_keys = ON;", (err) => {
+            if (err) {
+                console.error('Erreur lors de l’activation des clés étrangères:', err.message);
+            } else {
+                console.log('Clés étrangères activées avec succès');
+            }
+        });
         initializeDatabase();
     }
 });
+
+
+db.run("PRAGMA foreign_keys = ON;");
 
 // Fonction pour initialiser la base de données
 function initializeDatabase() {
@@ -32,7 +43,9 @@ function initializeDatabase() {
             telephone TEXT,
             mot_de_passe TEXT NOT NULL,
             type_utilisateur TEXT NOT NULL ,
-            adresse TEXT
+            adresse TEXT,
+            reset_token_expires TEXT,
+            reset_token TEXT
         );`);
 
         // Table commerces
@@ -44,7 +57,7 @@ function initializeDatabase() {
             ouverture TIME NOT NULL,
             fermeture TIME NOT NULL,
             id_utilisateur INTEGER NOT NULL,
-            FOREIGN KEY (id_utilisateur) REFERENCES utilisateurs(id_utilisateur)
+            FOREIGN KEY (id_utilisateur) REFERENCES utilisateurs(id_utilisateur) ON DELETE CASCADE
         );`);
 
         // Table client_payment
@@ -56,7 +69,7 @@ function initializeDatabase() {
             cvv TEXT NOT NULL,
             carte_type TEXT NOT NULL,
             id_utilisateur INTEGER NOT NULL,
-            FOREIGN KEY (id_utilisateur) REFERENCES utilisateurs(id_utilisateur)
+            FOREIGN KEY (id_utilisateur) REFERENCES utilisateurs(id_utilisateur) ON DELETE CASCADE
         );`);
 
         // Table commerce_payment
@@ -68,7 +81,7 @@ function initializeDatabase() {
             nom_banque TEXT NOT NULL,
             devise TEXT NOT NULL DEFAULT 'EUR',
             id_commerce INTEGER NOT NULL,
-            FOREIGN KEY (id_commerce) REFERENCES commerces(id_commerce));
+            FOREIGN KEY (id_commerce) REFERENCES commerces(id_commerce) ON DELETE CASCADE );
         `);
 
         // Table offres
@@ -87,7 +100,8 @@ function initializeDatabase() {
             date_publication DATETIME DEFAULT CURRENT_TIMESTAMP,
             disponibilite_actuelle INTEGER NOT NULL,
             offre_URL TEXT,
-            FOREIGN KEY (id_commerce) REFERENCES commerces(id_commerce));
+            FOREIGN KEY (id_commerce) REFERENCES commerces(id_commerce) ON DELETE CASCADE
+            );
         `);
 
         // Table commandes
@@ -98,7 +112,7 @@ function initializeDatabase() {
             date_commande DATETIME DEFAULT CURRENT_TIMESTAMP,
             code_validation TEXT NOT NULL,
             status TEXT NOT NULL DEFAULT 'en attente' CHECK(status IN ('en attente', 'validée', 'en cours')),
-            FOREIGN KEY (id_client) REFERENCES utilisateurs(id_utilisateur));
+            FOREIGN KEY (id_client) REFERENCES utilisateurs(id_utilisateur) ON DELETE CASCADE );
         `);
 
         // Table commandes_offres
@@ -108,7 +122,8 @@ function initializeDatabase() {
             id_offre INTEGER NOT NULL,
             quantite INTEGER NOT NULL DEFAULT 1,
             FOREIGN KEY (id_commande) REFERENCES commandes(id_commande),
-            FOREIGN KEY (id_offre) REFERENCES offres(id_offre));
+            FOREIGN KEY (id_offre) REFERENCES offres(id_offre) ON DELETE CASCADE
+            );
         `);
 
         // Table transactions
@@ -118,8 +133,8 @@ function initializeDatabase() {
             montant REAL NOT NULL,
             id_client_payment INTEGER NOT NULL,
             date_transaction DATETIME DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (id_client_payment) REFERENCES client_payment(id_client_payment),
-            FOREIGN KEY (id_commerce_payment) REFERENCES commerce_payment(id_commerce_payment));
+            FOREIGN KEY (id_client_payment) REFERENCES client_payment(id_client_payment) ON DELETE CASCADE,
+            FOREIGN KEY (id_commerce_payment) REFERENCES commerce_payment(id_commerce_payment) ON DELETE CASCADE);
         `);
 
         db.on('trace', console.log);
