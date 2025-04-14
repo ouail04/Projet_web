@@ -12,6 +12,8 @@ const CommercePayment = require('../models/CommercePayment');
 const utilisateur = require('../models/Utilisateur');
 const e = require('express');
 
+
+// cette fonction permet d'afficher la page des commandes deja faites par le client
 exports.showCommandesPage = async (req, res) => {
     if(!req.session.user){
         return res.redirect('/') ;
@@ -50,6 +52,9 @@ exports.showCommandesPage = async (req, res) => {
     }
 };
 
+
+// cette fonction permet d'afficher la page de profil du client
+// elle affiche aussi la liste des cartes de paiement du client
 exports.showProfilPage = async (req, res) => {
     if(!req.session.user){
         return res.redirect('/') ;
@@ -92,7 +97,9 @@ exports.showProfilPage = async (req, res) => {
     });
 };
 
-
+// cette fonction permet de faire une recherche d'offres
+// elle est appelée lors de la soumission du formulaire de recherche sur la page des offres
+// elle redirige vers la page des offres avec les résultats de la recherche
 exports.searchOfferClient = async (req, res) => {
     let { nom_offre, type, sorted_experation = 'all', sorted_prix, ville } = req.query;
     type  == '' ? type = 'all' : type = type ;
@@ -140,7 +147,7 @@ exports.searchOfferClient = async (req, res) => {
     }
 };
 
-
+// cette fonction permet d'afficher la page de détails d'une offre
 exports.showDetailsOffer = async (req, res) => {
     if(!req.session.user){
         return res.redirect('/login') ;
@@ -179,6 +186,9 @@ exports.showDetailsOffer = async (req, res) => {
     }
 };
 
+
+// cette fonction permet d'ajouter une offre au panier du client
+// elle est appelée lors de la soumission du formulaire d'ajout au panier sur la page de détails de l'offre
 exports.addToPanier = async (req, res) => {
     try{
         const id_offre = req.query.id_offre;
@@ -214,7 +224,10 @@ exports.addToPanier = async (req, res) => {
     }
 }
 
-
+// cette fonction permet de supprimer une offre du panier du client
+// elle est appelée lors de la soumission du formulaire de suppression sur la page du panier
+// elle ajoute aussi la quantité de l'offre supprimée à la disponibilité de l'offre
+// et met à jour le prix total de la commande
 exports.deleteOfferPanier = async (req, res) => {
     try {
         const id_commande_offre = req.params.id;
@@ -234,7 +247,7 @@ exports.deleteOfferPanier = async (req, res) => {
     }
 }
 
-
+// cette fonction permet d'afficher la page de paiement
 exports.showPaymentPage = async (req, res) => {
     if(!req.session.user){
         return res.redirect('/') ;
@@ -268,20 +281,23 @@ exports.showPaymentPage = async (req, res) => {
     }
 };
 
-
+// cette fonction permet de traiter le paiement
 exports.processPayment = async (req, res) => {
     const { id_commande, id_client, savedCard, save_card, numero_carte, date_expiration, CVC, titulaire_carte, type_carte } = req.body;
-    
     const commande  = await Commande.getCommandeByID(id_commande);
     const list_commande_offre = await Commande_Offre.getCommande_OffreByIDCommande(id_commande);
     const offre_ = await offre.getOffreByIdOffre(list_commande_offre[0].id_offre);
     const banque_commerce = await CommercePayment.getCommercePaymentByID(offre_.id_commerce);
     const prix_totale = commande.prix_totale;
+    // si savedCard est cocher, on utilise la carte enregistrée
     if (savedCard){
+        // on utilise l'API de stripe pour faire le paiement
         const resultat = await PaiementStripe.paiementStripe(prix_totale * 100, 'eur');
         if (resultat.success || prix_totale==0) {
             console.log("1Paiement réussi avec la carte enregistrée :", resultat.clientSecret);
+            // on ajoute la transaction dans la base de données
             await Transaction.addTransaction(banque_commerce.id_commerce_payment, savedCard, prix_totale);
+            // on fait la mise à jour de la commande de 'en attente' à 'en cours'
             await Commande.updateStatusCommande(id_commande, 'en cours');
             req.flash('success', 'Paiement effectué avec succès.');
             return res.redirect('/offres');
@@ -289,6 +305,7 @@ exports.processPayment = async (req, res) => {
             console.error("Erreur de paiement :", resultat.error);
             return res.status(500).render('erreur', { message: "Une erreur est survenue lors du paiement." });
         }
+        // s'il a choisi de sauvegarder la carte, on l'ajoute à la base de données
     } else if(save_card && numero_carte && date_expiration && CVC && titulaire_carte) {
         const resultat = await PaiementStripe.paiementStripe(prix_totale * 100, 'eur');
         if (resultat.success || prix_totale==0) {
@@ -302,10 +319,13 @@ exports.processPayment = async (req, res) => {
             console.error("Erreur de paiement :", resultat.error);
             return res.status(500).render('erreur', { message: "Une erreur est survenue lors du paiement." });
         }
+        // s'il n'a pas choisi de sauvegarder la carte, on fait le paiement avec la nouvelle carte
     } else if (numero_carte && date_expiration && CVC && titulaire_carte) {
         const resultat = await PaiementStripe.paiementStripe(prix_totale * 100, 'eur');
         if (resultat.success || prix_totale == 0) {
             console.log("3Paiement réussi avec la nouvelle carte :", resultat.clientSecret);
+            // on ajoute la carte à la base de données meme si le client à pas choisi de la sauvegarder
+            // car on a besion de souvgarder la carte pour faire la transaction
             const id_client_payment = await client_payment.addClientPayment(numero_carte, date_expiration, CVC, titulaire_carte, type_carte, id_client);
             await Transaction.addTransaction(banque_commerce.id_commerce_payment, id_client_payment, prix_totale);
             await Commande.updateStatusCommande(id_commande, 'en cours');
@@ -321,6 +341,8 @@ exports.processPayment = async (req, res) => {
     return res.redirect('/payment/' + req.body.id_commande) ;
 }
 
+
+// cette fonction permet de faire une recherche de commandes
 exports.searchCommandeClient = async (req, res) =>{
     if(!req.session.user){
         return res.redirect('/') ;
@@ -359,7 +381,8 @@ exports.searchCommandeClient = async (req, res) =>{
     }
 }
 
-
+// cette fonction permet de faire la mise à jour du profil du client
+// seulment les champs adresse, nom, prenom, telephone et email peuvent être mis à jour
 exports.updateProfil = async (req, res) => {
     try {
         const { adresse, nom, prenom, telephone, email } = req.body;
@@ -394,7 +417,7 @@ exports.updateProfil = async (req, res) => {
 };
 
 
-
+// cette fonction permet de faire la mise à jour du mot de passe du client et de commercant
 exports.updatePasword = async(req, res) =>{
     const {currentPassword, newPassword} = req.body ;
     
@@ -414,6 +437,8 @@ exports.updatePasword = async(req, res) =>{
     }                     
 }
 
+
+// cette fonction permet d'ajouter une carte de paiement à partir de la page de profil
 exports.addCartePayment = async (req, res) =>{
     try{
         const {titulaire_carte, numero_carte_client, date_expiration, cvv, carte_type} = req.body ;
@@ -427,7 +452,7 @@ exports.addCartePayment = async (req, res) =>{
     }
 }
 
-
+// cette fonction permet de supprimer une carte de paiement à partir de la page de profil
 exports.deleteCartePaiement = async (req, res) =>{
    try{
         const id_client_payment = req.params.id ;

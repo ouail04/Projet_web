@@ -20,7 +20,7 @@ const db = new sqlite3.Database(DB_PATH, (err) => {
 
 
 class Transaction{
-
+    // cette methode permet de d'ajouter une nouvelle transaction
     static async addTransaction(id_commerce_payment, id_client_payment, montant){
         return new Promise((resolve, reject) => {
             const requete = "INSERT INTO transactions (id_commerce_payment, id_client_payment, montant) VALUES (?, ?, ?)";

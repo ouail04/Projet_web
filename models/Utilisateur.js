@@ -20,6 +20,8 @@ const db = new sqlite3.Database(DB_PATH, (err) => {
 
 
 class utilisateur{
+
+    // cette methode permet d'ajouter un nouvel utilisateur
     static async create({nom, prenom, email, telephone, mot_de_passe, type_utilisateur, adresse}) {
         try{
             if (!mot_de_passe || typeof mot_de_passe !== 'string') {
@@ -46,7 +48,7 @@ class utilisateur{
         }        
     }
 
-
+    // cette methode permet de recuperer un utilisateur avec son email et son mot de passe
     static async getIDUtilisateur({ email, mot_de_passe }) {
         return new Promise((resolve, reject) => {
             const requete = "SELECT id_utilisateur, mot_de_passe, type_utilisateur FROM utilisateurs WHERE email = ?";
@@ -78,7 +80,7 @@ class utilisateur{
             });
         });
     }
-
+    // cette methode permet de recuperer un utilisateur avec son id_utilisateur
     static async getutilisateurByID(id_utilisateur){
         return new Promise((resolve, reject) => {
             const requete = "SELECT * FROM utilisateurs WHERE id_utilisateur = ?";
@@ -101,7 +103,7 @@ class utilisateur{
     
     }
 
-
+    // cette methode permet de faire la mise à jour d'un utilisateur avec id_utilisateur
     static async updateUtilisateur(id_utilisateur, adresse, nom, prenom, telephone, email){
         return new Promise((resolve, reject) => {
             const requete = "UPDATE utilisateurs SET adresse = ?, nom = ? , prenom = ? , telephone = ? , email = ? WHERE id_utilisateur = ?"
@@ -116,11 +118,12 @@ class utilisateur{
     }
 
 
-
+    // cette methode permet de faire la mise à jour du mot de passe d'un utilisateur avec id_utilisateur
     static async updatePassword(id_utilisateur, newPassword){
 
         return new Promise(async (resolve, reject) => {
             const requete = "UPDATE utilisateurs SET mot_de_passe = ? WHERE id_utilisateur = ?"
+            // Chiffrement du mot de passe avant de le stocker
             const mot_de_passe_hasher = await bcrypt.hash(newPassword,10);
             db.run(requete, [mot_de_passe_hasher, id_utilisateur], function(err){
                     if (err){
@@ -132,7 +135,7 @@ class utilisateur{
         });
     }
 
-
+    // cette methode permet de supprimer un utilisateur avec id_utilisateur
     static async deleteUtilisateur(id_utilisateur){
         return new Promise(async (resolve, reject) => {
             const requete = "DELETE FROM utilisateurs WHERE id_utilisateur = ?"
@@ -146,7 +149,7 @@ class utilisateur{
         });
     }
 
-
+    // cette methode permet de recuperer un utilisateur avec son email
     static async findEmail(email) {
         return new Promise((resolve, reject) => {
             const requete = "SELECT * FROM utilisateurs WHERE email = ?";
@@ -168,11 +171,12 @@ class utilisateur{
         });
     }
 
-
+    // cette methode permet de recuperer un utilisateur avec son email
     static async updatePasswordByEmail(email, newPassword){
 
         return new Promise(async (resolve, reject) => {
             const requete = "UPDATE utilisateurs SET mot_de_passe = ? WHERE email = ?"
+            // Chiffrement du mot de passe avant de le stocker
             const mot_de_passe_hasher = await bcrypt.hash(newPassword,10);
             db.run(requete, [mot_de_passe_hasher, email], function(err){
                     if (err){
@@ -183,8 +187,8 @@ class utilisateur{
             } );
         });
     }
-    
 
+    // cette methode permet de inserer un token de reinitialisation de mot de passe
     static async saveResetToken(email, token, expiresAt) {
         return new Promise((resolve, reject) => {
             const sql = `UPDATE utilisateurs SET reset_token = ?, reset_token_expires = ? WHERE email = ?`;
@@ -197,7 +201,7 @@ class utilisateur{
         });
     }
     
-
+    // cette methode permet de recuperer un utilisateur avec son token de reinitialisation de mot de passe
     static async findByResetToken(token) {
         return new Promise((resolve, reject) => {
             const sql = `SELECT * FROM utilisateurs WHERE reset_token = ?`;
@@ -208,7 +212,7 @@ class utilisateur{
         });
     }
 
-    
+    // cette methode permet reinitialiser le token et le temps d'expiration à null apres la reinitialisation du mot de passe    
     static async clearResetToken(email) {
         return new Promise((resolve, reject) => {
             const sql = `UPDATE utilisateurs SET reset_token = NULL, reset_token_expires = NULL WHERE email = ?`;

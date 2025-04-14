@@ -16,7 +16,12 @@ const db = new sqlite3.Database(DB_PATH, (err) => {
     }
 });
 
+
+// ce modele est utilisé pour faire le lien entre les commandes et les offres
+// il permet principalement de stocker une comande avec plusieurs offres
 class Commande_Offre{
+
+    // cette methode permet d'ajouter une nouvelle commande offre
     static async addCommande_Offre(id_commande, id_offre, quantite){
         return new Promise((resolve, reject) => {
             const requete = "INSERT INTO commandes_offres (id_commande, id_offre, quantite) VALUES (?, ?, ?)";
@@ -31,6 +36,7 @@ class Commande_Offre{
         });
     }
 
+    // cette methode permet de recuperer une commande offre avec id_commande_offre
     static async getCommande_OffreByID(id_commande_offre) {
         return new Promise((resolve, reject) => {
             const requete = "SELECT * FROM commandes_offres WHERE id_commande_offre = ?";
@@ -48,7 +54,7 @@ class Commande_Offre{
         });
     }
 
-
+    // cette methode permet de supprimer une commande offre avec id_commande_offre
     static async deleteOfferPanier(id_offre) {
         return new Promise((resolve, reject) => {
             const requete = "DELETE FROM commandes_offres WHERE id_commande_offre = ?";
@@ -62,6 +68,8 @@ class Commande_Offre{
         });
     }
 
+
+    // cette methode permet de recuperer toutes les commandes offres avec id_commande
     static async getCommande_OffreByIDCommande(id_commande) {
         return new Promise((resolve, reject) => {
             const requete = "SELECT * FROM commandes_offres WHERE id_commande = ?";

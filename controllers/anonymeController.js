@@ -3,12 +3,11 @@ const offre = require('../models/offre');
 const Commande = require('../models/Commande');
 const utilisateur = require('../models/Utilisateur');
 
+
+// cette fonction permet d'afficher la page d'accueil de l'application de client et l'utilisateur anonyme
 exports.showHomePage = async (req, res) => {
-    
-
-        
-
     try{
+        // Recuperation des 6 dernières offres
         const offres = await offre.searchOfferClient('', 'all', 'all', 'all', '', 6) ; 
         const css_files = [
             "client/panier.css", 
@@ -80,6 +79,8 @@ exports.showHomePage = async (req, res) => {
     }
 };
 
+
+// cette fonction permet d'afficher la page d'offres de l'application de client et l'utilisateur anonyme
 exports.showOffersPage = async (req, res) => {
     let session = null;
     let panier ;
@@ -135,7 +136,7 @@ exports.showOffersPage = async (req, res) => {
         res.status(500).render('erreur', { message: "Une erreur est survenue lors de la recherche." });
     }
 };
-
+// cette fonction permet d'afficher la partie "Comment ça marche" de la page d'accueil de l'application de client et l'utilisateur anonyme
 exports.showHowItWorksSection = async (req, res) => {
-    res.redirect('/#comment-ca-marche');  // Redirige vers la page d'accueil avec l'ancre
+    res.redirect('/#comment-ca-marche'); 
 };

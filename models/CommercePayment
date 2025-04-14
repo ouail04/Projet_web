@@ -20,6 +20,8 @@ const db = new sqlite3.Database(DB_PATH, (err) => {
 });
 
 class CommercePayment{
+
+    // cette methode permet d'ajouter une nouvelle carte de paiement d'un commercant
     static async addNewInfoPayment({IBAN_commerce, BIC_SWIFT, titulaire_compte, nom_banque,devise,id_commerce}){
         return new Promise((resolve, reject)=>{
             const crybted_Iban = encrypt_data(IBAN_commerce) ;
@@ -36,7 +38,7 @@ class CommercePayment{
             )
         });   
     }
-
+    // cette methode permet de recuperer les informations de paiement d'un commercant avec id_commerce
     static async getCommercePaymentByID(id_commerce){
         return new Promise((resolve, reject)=>{
             const requete = "SELECT * FROM commerce_payment WHERE id_commerce = ?";
@@ -53,7 +55,7 @@ class CommercePayment{
             });
         });
     }
-
+    // cette methode permet de faire la mise à jour d'une carte de paiement d'un commercant
     static async updateInfoCarteCommercant(IBAN_commerce, BIC_SWIFT, titulaire_compte, nom_banque,devise,id_commerce){
         return new Promise((resolve, reject) => {
             const requete = `
@@ -65,6 +67,7 @@ class CommercePayment{
                     devise = ? 
                 WHERE id_commerce = ?
             `;
+            // Chiffrement de IBAN avant de le stocker
             const crybted_Iban = encrypt_data(IBAN_commerce) ;
             db.run(
                 requete, 

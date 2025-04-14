@@ -1,6 +1,7 @@
 require('dotenv').config();
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
+// Cette classe gère le paiement via Stripe
 class PaiementStripe {
     static async paiementStripe(amount, currency = 'eur') {
         try {

@@ -21,7 +21,7 @@ const db = new sqlite3.Database(DB_PATH, (err) => {
 
 class offre{
 
-
+    // cette methode permet d'ajouter une nouvelle offre
     static async addNewOffre({id_commerce, nom_offre, type, prix_avant, prix_apres, date_expiration, 
             disponibilite, description, condition, statut, imageURL}){
             return new Promise((resolve, reject) =>{
@@ -44,7 +44,7 @@ class offre{
 
             });
     }
-
+    // cette methode permet de recuperer toutes les offres d'un commercant avec id_commerce
     static async getOffresByID(id_commerce){
         return new Promise((resolve, reject) =>{
             const requete = "SELECT * FROM offres WHERE id_commerce = ?" ;
@@ -63,7 +63,7 @@ class offre{
             });
         } );
     }
-
+    // cette methode permet de recuperer une offre avec id_offre
     static async getOffreByIdOffre(id_offre){
         return new Promise((resolve, reject) =>{
             const requete = "SELECT * FROM offres WHERE id_offre = ?" ;
@@ -81,7 +81,7 @@ class offre{
             });
         });
     }
-
+    // cette methode permet de faire la mise à jour d'une offre avec id_offre
     static async updateOffer({id_offre, nom_offre, type, prix_avant, prix_apres, date_expiration, 
         disponibilite, description, condition, statut, imageURL}) {
         return new Promise((resolve, reject) => {
@@ -117,7 +117,7 @@ class offre{
 
 
 
-
+    // cette methode permet de recuperer l'url de l'image d'une offre avec id_offre
     static async getImageUrl(id_offre) {
             return new Promise((resolve, reject) => {
                 const requete = "SELECT offre_URL  FROM offres WHERE id_offre = ?";
@@ -137,7 +137,7 @@ class offre{
             });
         }
 
-
+    // cette methode permet de supprimer une offre avec id_offre
     static async deleteOffre(id_offre) {
         return new Promise((resolve, reject) => {
             const requete = "DELETE FROM offres WHERE id_offre = ?";
@@ -160,7 +160,7 @@ class offre{
     }
 
 
-
+    // cette methode permet de faire la mise à jour du status d'une offre avec id_offre
     static async setStatus(id_offre, statut) {
         return new Promise((resolve, reject) => {
             const requete = "UPDATE offres SET statut = ? WHERE id_offre = ?";
@@ -182,7 +182,7 @@ class offre{
         });
     }
 
-
+    // cette methode permet de recuperer toutes les offres avec nom_offre, type, statut
     static async searchOffer(nom_offre, type, sort_by, statut) {
         return new Promise((resolve, reject) => {
             let requete = "SELECT * FROM offres WHERE statut = 'active' AND nom_offre LIKE ? " ;
@@ -218,7 +218,7 @@ class offre{
     }
 
 
-
+    // cette methode permet de recuperer toutes les offres avec nom_offre, type, statut
     static async searchOfferClient(nom_offre, type ,sorted_experation, sorted_prix, ville, limit = 6) {
         return new Promise((resolve, reject) => {
             let requete = "SELECT * FROM offres NATURAL JOIN commerces WHERE offres.nom_offre LIKE ? AND offres.statut = 'active' AND commerces.adresse_commerce LIKE ? " ;
@@ -258,7 +258,7 @@ class offre{
         });
     }
 
-
+    // cette methode permet de recuperer un offre avec id_offre
     static async getOffreByID(id_offre) {
         return new Promise((resolve, reject) => {
             const requete = "SELECT * FROM offres NATURALE JOIN commerces WHERE id_offre = ?";
@@ -282,7 +282,7 @@ class offre{
 
     
 
-
+    // cette methode permet de recuperer le prix d'une offre avec id_offre
     static async getPrix(id_offre) {
         return new Promise((resolve, reject) => {
             const requete = "SELECT * FROM offres WHERE id_offre = ?";
@@ -304,7 +304,7 @@ class offre{
 
     }
     
-
+    // cette methode permet de faire la mise à jour de la disponibilite d'une offre avec id_offre
     static async updateDiponibilite(nouvelle_dispo, id_offre){
         return new Promise((resolve, reject) => {
             const requete = "UPDATE offres SET disponibilite_actuelle = ? WHERE id_offre = ?"

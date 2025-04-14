@@ -5,9 +5,9 @@ const anonymeController = require('./anonymeController');
 const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
 const nodemailer = require('nodemailer');
+// ce fichier contient les fonctions pour gérer l'authentification et l'inscription des utilisateurs
 
-
-
+// cette fonction affiche la page d'inscription
 exports.showRegisterPage = async (req, res) => {
     res.render('partials/register',
         {
@@ -19,7 +19,7 @@ exports.showRegisterPage = async (req, res) => {
     );
 };
 
-
+// cette fonction afficher la page d'inscription de commerce si l'utilisateur est un commercant
 exports.showCommerceRegisterPage = async (req, res) => {
     res.render('commercant/commerce-register',{
         messages: {
@@ -29,10 +29,14 @@ exports.showCommerceRegisterPage = async (req, res) => {
     });
 };
 
+
+// cette fonction affiche ma page pour enregistrer les informations de paiement du commerce
 exports.showCommercePaymentRegisterPage = async (req, res) => {
     res.render('commercant/commerce-payment-register');
 };
 
+
+// cette fonction affiche la page de connexion
 exports.showLoginPage = async (req, res) => {
     res.render('partials/login',{
         messages: {
@@ -43,7 +47,7 @@ exports.showLoginPage = async (req, res) => {
     );
 };
 
-// fonctions 
+// cette fontion permet de créer un compte utilisateur apres la validation du formulaire d'inscription
 exports.createAccount = async (req, res) => {
     try {
         const { nom, prenom, email, telephone, mot_de_passe, confirmation_mot_de_passe, type_utilisateur, adresse } = req.body;
@@ -68,7 +72,8 @@ exports.createAccount = async (req, res) => {
 };
 
 
-
+// cette fonction permet de se deconnecter de l'application
+// elle supprime la session de l'utilisateur et le redirige vers la page de connexion
 exports.deconnexion = async (req, res) =>{
     req.session.destroy((err) => {
         if (err) {
@@ -78,7 +83,7 @@ exports.deconnexion = async (req, res) =>{
     });
 }
 
-
+// fonction pour ajouter un commerce lors de l'inscription
 exports.addNewCommerce = async (req, res) =>{
     try{
         if (!req.session.user || !req.session.user.id_utilisateur) {
@@ -97,7 +102,7 @@ exports.addNewCommerce = async (req, res) =>{
     }
 }
 
-
+// cette fontion permet d'ajouter les informations de paiement du commerce
 exports.addNewInfoPayemntCommerce = async (req, res) => {
     try{
         if (!req.session.user || !req.session.user.id_utilisateur || !req.session.user.id_commerce) {
@@ -116,6 +121,9 @@ exports.addNewInfoPayemntCommerce = async (req, res) => {
     }
 }
 
+
+// cette fonction permet de se connecter à l'application
+// si l'utilisateur est un client, il ajoute un id de session et le redirige vers la page d'accueil
 exports.login = async (req, res) => {
     try{
         const {email, mot_de_passe} = req.body ;
@@ -141,6 +149,10 @@ exports.login = async (req, res) => {
     
 }
 
+
+// cette fonction permet de supprimer le compte d'utilisateur 
+// si l'utilisateur à supprimer son compte, tous les informations de son compte seront supprimées de la base de données
+// à l'aide de ON DELETE CASCADE dans la base de données
 exports.deleteAccount = async (req, res) => {
     try {
         // 1. Vérification de session
@@ -198,7 +210,7 @@ exports.getForgotPasswordPage = (req, res) => {
     res.render('partials/forgot-password', { message: null });
 };
 
-// Envoie le lien par mail
+// Envoie le lien par mail pour modifier le mot de passe
 exports.sendResetLink = async (req, res) => {
     const { email } = req.body;
     const user = await utilisateur.findEmail(email); // À adapter
@@ -242,7 +254,7 @@ exports.getResetPasswordPage = async (req, res) => {
 };
 
 
-
+// Modifie le mot de passe
 exports.postResetPassword = async (req, res) => {
     const { token } = req.params;
     const { newPassword } = req.body;

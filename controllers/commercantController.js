@@ -8,7 +8,7 @@ const CommercePayment = require('../models/CommercePayment');
 const { decrypt_data } = require('./security');
 
 
-
+// Fonction pour afficher la page d'accueil du commerçant
 exports.showCommercantIndexPage = async (req, res) => {
     if(!req.session.user){
         return res.redirect('/') ;
@@ -36,6 +36,8 @@ exports.showCommercantIndexPage = async (req, res) => {
     });
 };
 
+
+// cette fonction affiche la page des offres du commerçant
 exports.showCommercantOffres = async (req, res) => {
     if(!req.session.user){
         return res.redirect('/') ;
@@ -81,6 +83,8 @@ exports.showCommercantOffres = async (req, res) => {
     
 };
 
+
+// cette fonction affiche la page des commandes du commerçant qui sont en cours ou validées faite par le client 
 exports.showCommercantCommandes = async (req, res) => {
     if(!req.session.user){
         return res.redirect('/') ;
@@ -111,7 +115,7 @@ exports.showCommercantCommandes = async (req, res) => {
     });
 };
 
-
+// cette fonction affiche la page de profil du commerçant
 exports.showCommercantProfil = async (req, res) => {
     if(!req.session.user){
         return res.redirect('/') ;
@@ -155,6 +159,10 @@ exports.showCommercantProfil = async (req, res) => {
     });
 };
 
+
+// cette fonction permet d'ajouter une nouvelle offre
+// elle appelle la fonction telechargerImage pour gérer le téléchargement de l'image
+// telechargerImage est une fonction qui telecharge l'image et la stocke dans le dossier static/upload
 exports.addOffer = [
     telechargerImage, 
     async (req, res) => {
@@ -181,19 +189,21 @@ exports.addOffer = [
     }
 ];
 
+
+// cette fonction permet de modifier une offre existante
 exports.editOffer = [telechargerImage, async (req, res) => {
     try {
-        // Correction des noms de paramètres
         const {id_offre, nom_offre, type, prix_avant, prix_apres, date_expiration, 
               disponibilite, description, condition, statut} = req.body;
 
         let image_url = null;
+        // Vérification si le commercant à telecharger une nouvelle image
         if (req.file) {
-            // Chemin absolu et vérification
             image_url = '/static/upload/' + req.file.filename;
             console.log('Nouvelle image:', image_url);
             try {
                 const image_url_delete = await Offre.getImageUrl(id_offre) ;
+                // si oui on supprime l'ancienne image
                 await deleteImage(image_url_delete.offre_URL);
                 console.log("suppression avec succes")  ;
             } catch (error) {
@@ -224,7 +234,7 @@ exports.editOffer = [telechargerImage, async (req, res) => {
     }
 }];
 
-
+// cette fonction permet de supprimer une offre existante
 exports.deleteOffer = async (req, res) => {
     try {
         const { id_offre } = req.body;
@@ -240,7 +250,7 @@ exports.deleteOffer = async (req, res) => {
     }
 };
 
-
+// cette fonction permet de changer le statut d'une offre existante de 'active' à 'pause' ou vice versa
 exports.setStatus = async (req, res) => {
     try {
         const { id_offre, statut } = req.body;
@@ -254,7 +264,7 @@ exports.setStatus = async (req, res) => {
     }
 }
 
-
+// cette fonction permet de rechercher les offres
 exports.searchOffer = async (req, res) => {
     if(!req.session.user){
         return res.redirect('/') ;
@@ -278,11 +288,12 @@ exports.searchOffer = async (req, res) => {
     });
 }
 
-
+// cette fonction permet de valider une commande en entrant le code de validation
 exports.validerCommande = async (req, res) => {
     const {id_commande, code_validation} = req.body ;
     const commande = await Commande.getCommandeByID(id_commande) ;
     if (code_validation  == commande.code_validation){
+        // changer le statut de la commande à 'validée'
         await Commande.updateStatusCommande(id_commande, 'validée') ;
         req.flash('success','commande valider avec succes') ;
         return res.redirect('/commercant-commandes');
@@ -292,10 +303,11 @@ exports.validerCommande = async (req, res) => {
     }
 }
 
-
+// cette fonction permet de changer les informations sur le commerce de commercant 
+// la fonction qui fait la mise à jour des informations de commercant et son mot de passe c'est la meme que de client 
 exports.updateCommercantProfil = async (req, res) => {
     try {
-        // 1. Validation des données
+        
         const { nom_commerce, adresse_commerce, ouverture, fermeture } = req.body;
         
         if (!nom_commerce || !adresse_commerce) {
@@ -332,7 +344,7 @@ exports.updateCommercantProfil = async (req, res) => {
     }
 };
 
-
+// cette fonction permet de changer les informations de paiement du commercant
 exports.updateCommercePaiement = async (req, res ) =>{
     try{
         const {iban, bic, titulaire_compte, nom_banque, devise} = req.body ;

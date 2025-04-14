@@ -18,6 +18,9 @@ const db = new sqlite3.Database(DB_PATH, (err) => {
 });
 
 class Commerce{
+
+    // cette methode permet d'ajouter un nouveau commerce 
+    // explication : Le mot NOWEEKEND est utilisé pour crier un commerce sans l'ouverture le week-end dans la conception de qu'était prevue mais apres on a decidé de ne pas l'utiliser
     static async addNewCommerceNoWeekend({ id_utilisateur, nom_commerce, adresse_commerce, siret, ouverture, fermeture }) {
         return new Promise((resolve, reject) => { 
             const requete =
@@ -35,7 +38,7 @@ class Commerce{
         });
     }
     
-
+    // cette methode permet de faire la mise à jour d'un commerce
     static async updateCommerce(id_utilisateur, nom_commerce, adresse_commerce, ouverture, fermeture) {
         return new Promise((resolve, reject) => {
             const requete = `
@@ -67,7 +70,7 @@ class Commerce{
         });
     }
 
-
+    // cette methode permet de recuperer les informations d'un commerce avec id_utilisateur
     static async getCommerceInfo(id_utilisateur){
         return new Promise((resolve, reject) =>{
             const requete = "SELECT * FROM commerces WHERE id_utilisateur = ?";

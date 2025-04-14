@@ -19,6 +19,8 @@ const db = new sqlite3.Database(DB_PATH, (err) => {
 });
 
 class Commande{
+
+    // cette methode permet d'ajouter une nouvelle commande
     static async addCommande(id_client, prix_total){
         return new Promise(async (resolve, reject) => {
                 const sql = `INSERT INTO commandes (id_client, prix_totale, code_validation) VALUES (?, ?, ?)`;
@@ -36,7 +38,7 @@ class Commande{
         });
     }
 
-    
+    // cette methode permet de recuperer toutes les commandes d'un client avec id_utilisateur
     static async getPanierByID(id_utilisateur) {
         return new Promise((resolve, reject) => {
             const requete = "SELECT * FROM commandes_offres " +
@@ -60,6 +62,8 @@ class Commande{
         });
     }
 
+
+    // cette commande permet de recuperer une commande avec id_utilisateur mais en Attente il est pas encore payé
     static async getIdCommandeEnAttente(id_utilisateur) {
         return new Promise((resolve, reject) => {
             const requete = "SELECT * FROM commandes WHERE id_client = ? AND status = 'en attente'";
@@ -79,7 +83,7 @@ class Commande{
             });
         });
     }
-
+    // cette methode permet de faire la mise à jour du prix total d'une commande avec id_commande
     static async updatePrix(id_commande, prix_totale) {
         return new Promise((resolve, reject) => {
             const requete = "UPDATE commandes SET prix_totale = ? WHERE id_commande = ?";
@@ -95,6 +99,7 @@ class Commande{
         });
     }
 
+    // cette methode permet de recuperer une commande avec id_commande
     static async getCommandeByID(id_commande) {
         return new Promise((resolve, reject) => {
             const requete = "SELECT * FROM commandes WHERE id_commande = ?";
@@ -115,6 +120,8 @@ class Commande{
         });
     }
 
+
+    // cette methode permet de  faire la mise à jour du status d'une commande avec id_commande
     static async updateStatusCommande(id_commande, status) {
         return new Promise((resolve, reject) => {
             const requete = "UPDATE commandes SET status = ? WHERE id_commande = ?";
@@ -129,7 +136,7 @@ class Commande{
             });
         });
     }
-
+    // cette methode permet de recuperer toutes les commandes d'un client avec id_client
     static async getCommandesByIDClient(id_client){
         return new Promise((resolve, reject) => {
             const requete = "SELECT * FROM commandes " +
@@ -153,7 +160,9 @@ class Commande{
         });
     }
 
-
+    // cette methode permet de recueperer toutes les commandes avec id_client qui continent une offre avec nom offre et status
+    // date_commande = 'recent' pour recuperer les commandes par order de date decroissant
+    // date_commande = 'default' pour recuperer les commandes par order de date croissant
     static async searchCommandesClient(id_client, nom_offre, status, date_commande){
         return new Promise((resolve, reject) => {
             let requete = "SELECT * FROM commandes " +
@@ -187,7 +196,7 @@ class Commande{
         });
     }
 
-
+    // pareil que la methode searchCommandesClient mais pour les commandes d'un commerce
     static async searchCommandesCommerce(id_commerce, nom_offre, status, date_commande){
         return new Promise((resolve, reject) => {
             let requete = "SELECT * FROM commandes " +
