@@ -57,7 +57,7 @@
     color: #333; /* Couleur du texte */
 }
 
-.btn-primary {
+button.btn-primary {
     background-color: #28a745; /* Couleur verte */
     border: none;
     padding: 10px 30px;
@@ -66,7 +66,7 @@
     transition: background-color 0.3s ease;
 }
 
-.btn-primary:hover {
+button.btn-primary:hover {
     background-color: #218838; /* Couleur verte plus foncée au survol */
 }
 

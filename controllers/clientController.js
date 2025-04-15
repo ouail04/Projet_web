@@ -80,7 +80,7 @@ exports.showProfilPage = async (req, res) => {
         let id_commande ;
         panier.length > 0 ? id_commande = panier[0].id_commande : id_commande = null ;
         
-    css_files = ["client/panier.css", "client/information-personnelle.css"] ;
+    css_files = ["client/panier.css", "client/information-personnelle.css", "client/filtre-section-commande.css"] ;
     res.render('client/client-profil', {
         titre: 'Profil Client',
         pages,
@@ -105,7 +105,8 @@ exports.searchOfferClient = async (req, res) => {
     type  == '' ? type = 'all' : type = type ;
     sorted_experation == '' ? sorted_experation = 'all' : sorted_experation = sorted_experation ;
     console.log('Paramètres de recherche:', { nom_offre, type, sorted_experation, sorted_prix, ville });
-    let session ;
+    let session = null;
+    let panier ;
     const pages = [
         { titre: "Accueil", lien: "/" },
         { titre: "Offres", lien: "/offres" },
@@ -115,17 +116,17 @@ exports.searchOfferClient = async (req, res) => {
     ];
     
     const css_files = [
-        "anonyme/panier.css", 
+        "client/panier.css", 
         "anonyme/filtre-section-offres.css", 
         "anonyme/offres-section-index.css", 
         "anonyme/offres.css"
     ];
     
     try {
-        const offers = await offre.searchOfferClient(nom_offre, type, sorted_experation, sorted_prix, ville);
+        const offers = await offre.searchOfferClient(nom_offre, type, sorted_experation, sorted_prix, ville, 0);
         if(req.session.user){
-            const panier = await Commande.getPanierByID(req.session.user.id_utilisateur);
-            session = req.session.user ;
+            panier = await Commande.getPanierByID(req.session.user.id_utilisateur);
+            session = req.session ;
         } else {
             panier = [] ;
             session = null ;
@@ -140,6 +141,10 @@ exports.searchOfferClient = async (req, res) => {
             offers: offers,
             session : session,
             nom_offre, type, sorted_experation, sorted_prix, ville, panier, id_commande, 
+            messages: {
+                success: req.flash('success'),
+                error: req.flash('error')
+            }
         });
     } catch (error) {
         console.error("Erreur lors de la recherche d'offres:", error);
@@ -273,7 +278,8 @@ exports.showPaymentPage = async (req, res) => {
             css_files,
             panier,
             commande,
-            carte_payment
+            carte_payment,
+            id_commande
         });
     } catch (error) {
         console.error("Erreur lors de l'affichage de la page de paiement:", error);

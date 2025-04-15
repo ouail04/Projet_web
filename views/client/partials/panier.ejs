@@ -7,5 +7,5 @@
             <li><%= offre.nom_offre%> x<%= offre.quantite %> - <%= offre.prix_apres %> € <a href="/delete-offre-panier/<%= offre.id_commande_offre %>"><i class="bi bi-trash3-fill me-2"></i></a> </li>
         <% }); %>
     </ul>
-    <a class="btn btn-primary w-100" href="/payment/<%= id_commande %>">Passer la commande</a>
+    <a class="btn btn-primary w-100" href="/payment/<%= id_commande %>" style="background-color: #28a745;" >Passer la commande</a>
 </div>

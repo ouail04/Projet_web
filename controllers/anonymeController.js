@@ -104,7 +104,7 @@ exports.showOffersPage = async (req, res) => {
         {titre : "Contact", lien : "#contact"}];
     }
     try{
-        const offres = await offre.searchOfferClient('', 'all', 'all', 'all', '') ; 
+        const offres = await offre.searchOfferClient('', 'all', 'all', 'all', '',0) ; 
         const css_files = [
             "client/panier.css", 
             "anonyme/filtre-section-offres.css", 

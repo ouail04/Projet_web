@@ -218,7 +218,43 @@ class offre{
     }
 
 
-    // cette methode permet de recuperer toutes les offres avec nom_offre, type, statut
+
+    // cette methode permet de recuperer toutes les offres avec nom_offre, type avec id_commerce
+    static async searchOfferByIdCommerce(id_commerce,nom_offre, type, sort_by, statut) {
+        return new Promise((resolve, reject) => {
+            let requete = "SELECT * FROM offres WHERE nom_offre LIKE ? AND id_commerce = ? " ;
+            let params = [`%${nom_offre}%`, id_commerce];
+            if (type != "all") {
+                requete += "AND type = ? ";
+                params.push(type);
+            }
+            if (statut != "all") {
+                requete += "AND statut = ? ";
+                params.push(statut);
+            }
+            if(sort_by === "recent"){
+                requete += "ORDER BY date_publication DESC" ;
+            }else {
+                requete += "ORDER BY date_publication" ;
+            }
+            console.log(requete) ;
+            console.log(params) ;
+            db.all(requete, params, (err, rows) => {
+                if (err) {
+                    console.error("Erreur SQL :", err.message);
+                    return reject(err);  
+                }
+                if (rows.length === 0) {
+                    console.log("Aucune offre trouvée");
+                    return resolve([]);  
+                }
+                return resolve(rows);  
+            });
+        });
+    }
+
+
+    // cette methode permet de recuperer toutes les offres avec nom_offre, type, statut avec limit
     static async searchOfferClient(nom_offre, type ,sorted_experation, sorted_prix, ville, limit = 6) {
         return new Promise((resolve, reject) => {
             let requete = "SELECT * FROM offres NATURAL JOIN commerces WHERE offres.nom_offre LIKE ? AND offres.statut = 'active' AND commerces.adresse_commerce LIKE ? " ;
@@ -229,18 +265,20 @@ class offre{
             }
             if(sorted_prix != 'all' && sorted_experation == 'all'){
                 sorted_prix == 'haut' ? requete += "ORDER BY offres.prix_apres DESC" : requete += "ORDER BY offres.prix_apres" ;
-            } else{
-                if (sorted_experation != 'all' && sorted_prix == 'all'){
-                    sorted_experation == 'haut' ? requete += "ORDER BY offres.date_expiration DESC" : requete += "ORDER BY offres.date_expiration" ;
-                } else{
-                    if(sorted_experation != 'all' && sorted_prix != 'all'){
-                        sorted_prix == 'haut' ? requete += "ORDER BY offres.prix_apres DESC, " : requete += "ORDER BY offres.prix_apres, " ;  
-                        sorted_experation == 'haut' ? requete += "offres.date_expiration DESC" : requete += "offres.date_expiration" ;
+            } else {
+                if (sorted_experation != 'all' && sorted_prix == 'all') {
+                    sorted_experation === 'haut' ? requete += "ORDER BY offres.date_expiration DESC" : requete += "ORDER BY offres.date_expiration";
+                } else {
+                    if (sorted_experation != 'all' && sorted_prix != 'all') {
+                        sorted_prix === 'haut' ? requete += "ORDER BY offres.prix_apres DESC, " : requete += "ORDER BY offres.prix_apres, ";
+                        sorted_experation === 'haut' ? requete += "offres.date_expiration DESC" : requete += "offres.date_expiration";
                     }
                 }
             }
-            limit != false ? requete += " LIMIT ?" : requete += "" ;
-            params.push(limit) ;
+            if(limit != 0){
+                requete += " LIMIT ?" ;
+                params.push(limit) ;
+            }
 
             console.log(requete) ;
             console.log(params) ;

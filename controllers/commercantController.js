@@ -23,15 +23,15 @@ exports.showCommercantIndexPage = async (req, res) => {
 
         const user = await utilisateur.getutilisateurByID(req.session.user.id_utilisateur);
         const listCommandes = await Commande.searchCommandesCommerce(req.session.user.id_utilisateur,'', 'default', 'recent'); 
-        const mes_offres = await Offre.getOffresByID(req.session.user.id_utilisateur);
-        console.log(mes_offres);
+        const commerceUser = await Commerce.getCommerceInfo(req.session.user.id_utilisateur) ;
+        const mes_offres = await Offre.getOffresByID(commerceUser.id_commerce) ;
     res.render('commercant/index-commercant', {
         titre: 'Accueil',
         pages,
         css_files,
         user,
         listCommandes,
-        mes_offres
+        mes_offres 
 
     });
 };
@@ -50,7 +50,8 @@ exports.showCommercantOffres = async (req, res) => {
         {titre : "Contact", lien : "#contact"}];
     css_files = ["mes-offres.css"] ;
     try{
-        const listOffres = await Offre.getOffresByID(req.session.user.id_utilisateur) ;
+        const commerceUser = await Commerce.getCommerceInfo(req.session.user.id_utilisateur) ;
+        const listOffres = await Offre.getOffresByID(commerceUser.id_commerce) ;
         res.render('commercant/mes-offres', {
             titre: 'Mes offres',
             pages,
@@ -175,8 +176,11 @@ exports.addOffer = [
             }
             
             const imageURL = '/static/upload/' + req.file.filename;
-            const id_commerce = req.session.user?.id_utilisateur;
-            Offre.addNewOffre({id_commerce, nom_offre, type, prix_avant, prix_apres, date_expiration, 
+            const id_utilisateur = req.session.user?.id_utilisateur;
+            const commerceUser = await Commerce.getCommerceInfo(id_utilisateur);
+            console.log('Debug - ID utilisateur:', id_utilisateur);
+            console.log('Debug - ID commerce:', commerceUser.id_commerce);
+            Offre.addNewOffre({id_commerce: commerceUser.id_commerce, nom_offre, type, prix_avant, prix_apres, date_expiration, 
                 disponibilite, description, condition, statut, imageURL,disponibilite  }) ;
             console.error('Offre ajouter avec succees');
             req.flash('success', 'Offre ajoutée avec succès');
@@ -272,7 +276,8 @@ exports.searchOffer = async (req, res) => {
     let { nom_offre, type, sort_by, statut } = req.query;
     if(nom_offre == undefined) nom_offre = " " ;
     console.log("nom_offre : ", nom_offre, " type : ", type, " sort_by : ", sort_by, " statut : ", statut) ;
-    const listOffres = await Offre.searchOffer(nom_offre, type, sort_by, statut) ;
+    const commerceUser = await Commerce.getCommerceInfo(req.session.user.id_utilisateur) ;
+    const listOffres = await Offre.searchOfferByIdCommerce(commerceUser.id_commerce, nom_offre, type, sort_by,statut) ;
     const pages = [
         {titre : "Accueil", lien : "/Commercant"},
         {titre : "Mes offres", lien : "/mes-offres"},
@@ -284,7 +289,10 @@ exports.searchOffer = async (req, res) => {
         titre: 'Mes offres',
         pages,
         css_files,
-        listOffres, nom_offre, type, sort_by, statut
+        listOffres, nom_offre, type, sort_by, statut, messages: {
+            success: req.flash('success'),
+            error: req.flash('error')
+        }
     });
 }
 
@@ -330,7 +338,6 @@ exports.updateCommercantProfil = async (req, res) => {
         }
 
         return res.redirect('/commercant-profil');
-
     } catch (err) {
         console.error("Erreur lors de la mise à jour du commerce:", err);
         
